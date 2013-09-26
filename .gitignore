@@ -1,3 +1,5 @@
+coverage.html
+.DS_Store
 lib-cov
 *.seed
 *.log
@@ -5,10 +7,16 @@ lib-cov
 *.dat
 *.out
 *.pid
-*.gz
-
-pids
-logs
-results
+*.swp
+*.swo
+benchmarks/graphs
+testing
+node_modules/
+bower_components/
+testing
+.coverage_data
+cover_html
+test.js
+.idea
 
 npm-debug.log

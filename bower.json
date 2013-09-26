@@ -1,0 +1,12 @@
+{
+    "name": "poker",
+    "version": "0.0.1",
+    "dependencies": {
+        "jquery": "#1.10.2",
+        "underscore": "latest",
+        "backbone":"latest",
+        "bootstrap":"latest",
+        "requirejs":"latest"
+    },
+    "main" : "site/js/lib"
+}

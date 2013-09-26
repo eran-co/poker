@@ -1,0 +1,18 @@
+{
+    "name": "poker",
+    "version": "0.0.1",
+    "description": "basic structure for the pokerApp",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/psyshush/poker.git"
+    },
+    "dependencies": {
+        "express": "~3.3.4",
+        "path": "~0.4.9",
+        "mongoose": "~3.6.16",
+        "connect-flash": "0.1.x",
+        "passport": ">= 0.0.0",
+        "passport-local": ">= 0.0.0",
+        "bcrypt": ">= 0.0.0"
+    }
+}
