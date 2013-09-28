@@ -4,6 +4,7 @@ require.config({
         jquery: 'lib/jquery',
         underscore: "lib/underscore",
         backbone: "lib/backbone",
+        rivets: 'lib/rivets',
         text: 'lib/text'
     },
     shim: {

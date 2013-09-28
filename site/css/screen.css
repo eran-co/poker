@@ -1,12 +1,60 @@
 .poker-table{
     background: url("../img/table.png") no-repeat ;
-    height: 870px;
+    height: 620px;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
     background-size: 100% 100%;
 }
 
+.player {
+    height: 175px;
+    width: 145px;
+    background: rgba(0, 0, 0, 0.37);
+    border-radius: 5px;
+    /*display: inline-block;*/
+}
+.player .name{
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+}
+#player1 {
+    position: absolute;
+    top: 2%;
+    left: 3%;
+}
 
+#player2 {
+    position: absolute;
+    top: -2%;
+    left: 41%;
+}
+
+#player3 {
+    position: absolute;
+    top: 2%;
+    left: 79%;
+}
+
+#player4 {
+    position: absolute;
+    top: 65%;
+    left: 84%;
+}
+
+#player5 {
+    position: absolute;
+    top: 73%;
+    left: 41%;
+}
+
+#player6 {
+    position: absolute;
+    top: 65%;
+    left: -1%;
+}
 
 /*****************************************************************************/
 /*cards css*/
