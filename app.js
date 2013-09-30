@@ -1,10 +1,12 @@
 var application_root = __dirname,
     express = require( 'express' ), //Web framework
     path = require( 'path'),
+    http = require('http'),
     db = require('./server/common/db');//Utilities for dealing with file paths
 
 //Create server
 var app = express();
+var server = http.createServer(app)
 
 app.configure( function() {
     //parses request body and populates request.body
@@ -47,6 +49,8 @@ app.get('/table', function(req, res){
 });
 
 var port = 3001;
-app.listen( port, function() {
+//var server = http.createServer(app);
+//server.listen(8080);
+server.listen( port, function() {
     console.log( 'Express server listening on port %d in %s mode', port, app.settings.env );
 });
