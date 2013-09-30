@@ -5,9 +5,13 @@ require.config({
         underscore: "lib/underscore",
         backbone: "lib/backbone",
         rivets: 'lib/rivets',
-        text: 'lib/text'
+        text: 'lib/text',
+        socketio: 'lib/socket.io'
     },
     shim: {
+        'socketio': {
+            exports: 'io'
+        },
         backbone: {
             'deps': ['jquery', 'underscore'],
             'exports': 'Backbone'

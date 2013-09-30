@@ -1,12 +1,12 @@
 var application_root = __dirname,
     express = require( 'express' ), //Web framework
     path = require( 'path'),
-    http = require('http'),
-    db = require('./server/common/db');//Utilities for dealing with file paths
-
+    io = require('socket.io'),
+    db = require('./server/common/db'),
 //Create server
-var app = express();
-var server = http.createServer(app)
+    app = express(),
+    server = require('http').createServer(app),
+    io = io.listen(server);
 
 app.configure( function() {
     //parses request body and populates request.body
@@ -53,4 +53,12 @@ var port = 3001;
 //server.listen(8080);
 server.listen( port, function() {
     console.log( 'Express server listening on port %d in %s mode', port, app.settings.env );
+});
+
+//socket.io test
+io.sockets.on('connection', function (socket) {
+    socket.emit('news', { hello: 'world' });
+    socket.on('my other event', function (data) {
+        console.log(data);
+    });
 });
