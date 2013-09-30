@@ -5,14 +5,16 @@ define(function(){
             seat:1,
             name: 'vick7',
             balance: 6363,
-            imageUrl:'../img/faces/1.jpg'
+            imageUrl:'../img/faces/1.jpg',
+            cards: ['8D','AS']
         },
         {
             id: 2,
             seat:2,
             name: 'adam',
             balance: 6265,
-            imageUrl:'../img/faces/2.jpg'
+            imageUrl:'../img/faces/2.jpg',
+            cards: ['KH','JH']
         },
         {
             id: 4,

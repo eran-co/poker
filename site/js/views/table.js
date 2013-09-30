@@ -5,27 +5,30 @@ define([
     'rivets',
     'models/player',
     'views/player',
+    'config/utils',
     'text!views/templates/table.html',
     'config/players'
-], function($, _, Backbone, rivets,PlayerModel,  PlayerView, template,players){
+], function($, _, Backbone, rivets,PlayerModel,  PlayerView, Utils,  template,players){
     var tableView = Backbone.View.extend({
         el: '#table',
 
         initialize: function(options){
+            this.model = options.model;
+            this.playerCollection = this.model.get('playersCollection');
             this.render();
         },
 
         render: function(){
             this.$el.html(template);
-            this.drawFlop(['5H','AD','QH']);
-            this.drawRiver('KC');
-            this.drawTurn('8S');
-            var model1 = new PlayerModel(players[0]);
-            var model2 = new PlayerModel(players[1]);
-            var model3 = new PlayerModel(players[2]);
-            var model4 = new PlayerModel(players[3]);
-            var model5 = new PlayerModel(players[4]);
-            var model6 = new PlayerModel(players[5]);
+            this.drawFlop(this.model.get('flop'));
+            this.drawRiver(this.model.get('river'));
+            this.drawTurn(this.model.get('turn'));
+            var model1 = this.playerCollection.findWhere({seat:1});
+            var model2 = this.playerCollection.findWhere({seat:2});
+            var model3 = this.playerCollection.findWhere({seat:3});
+            var model4 = this.playerCollection.findWhere({seat:4});
+            var model5 = this.playerCollection.findWhere({seat:5});
+            var model6 = this.playerCollection.findWhere({seat:6});
             new PlayerView({el:'#player1', model: model1}).render();
             new PlayerView({el:'#player2', model: model2}).render();
             new PlayerView({el:'#player3', model: model3}).render();
@@ -36,18 +39,18 @@ define([
         },
 
         drawFlop: function (cards){
-            $('#card1').attr('class', 'card rank' + cards[0]).text(cards[0][0]);
-            $('#card2').attr('class', 'card rank' + cards[1]).text(cards[1][0]);
-            $('#card3').attr('class', 'card rank' + cards[2]).text(cards[2][0]);
+            $('#card1').attr('class', 'card rank' + cards[0]).html(Utils.getCardText(cards[0]));
+            $('#card2').attr('class', 'card rank' + cards[1]).html(Utils.getCardText(cards[1]));
+            $('#card3').attr('class', 'card rank' + cards[2]).html(Utils.getCardText(cards[2]));
 
         },
 
         drawTurn: function (card){
-            $('#card4').attr('class', 'card rank' + card).text(card[0]);
+            $('#card4').attr('class', 'card rank' + card).html(Utils.getCardText(card));
         },
 
         drawRiver: function (card){
-            $('#card5').attr('class', 'card rank' + card).text(card[0]);
+            $('#card5').attr('class', 'card rank' + card).html(Utils.getCardText(card));
         }
     });
     return tableView;

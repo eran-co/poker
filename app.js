@@ -1,6 +1,7 @@
 var application_root = __dirname,
     express = require( 'express' ), //Web framework
-    path = require( 'path' );//Utilities for dealing with file paths
+    path = require( 'path'),
+    db = require('./server/common/db');//Utilities for dealing with file paths
 
 //Create server
 var app = express();
@@ -20,6 +21,29 @@ app.configure( function() {
 
     //Show all errors in development
     app.use( express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+
+var Player = require('./server/models/player').PlayerModel;
+
+var Table = require('./server/models/table').TableModel;
+
+//var table = Table.find({bet:30}, function (err, table) {
+//    console.log(table);
+//
+//    Player.find(function(err, players){
+//        players.forEach(function(elem, index){
+//           table.players.push(elem);
+//            console.log(elem);
+//            table.save();
+//        });
+//    });
+//});
+
+app.get('/table', function(req, res){
+    Table.findOne({bet:30}, function (err, table) {
+        res.send(table);
+    });
 });
 
 var port = 3001;
