@@ -48,8 +48,11 @@ body {
     vertical-align: baseline;
 }
 
-.player .sit-button {
-
+#table .sit-button {
+    top: 50px;
+    position: relative;
+    width: 75px;
+    left: 20px;
 }
 
 .player .card {
