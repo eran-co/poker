@@ -20,3 +20,21 @@ var tableData = {
     seats: [],
     dealer: 3
 }
+
+
+// create user
+//var userModel = require('./server/models/user').userModel;
+//
+//var user = new userModel({
+//    username:'eran',
+//    email:'shush6@gmail.com',
+//    password:'1234'
+//});
+//
+//user.save( function( err ) {
+//    if( !err ) {
+//        return console.log( 'created' );
+//    } else {
+//        return console.log( err );
+//    }
+//});

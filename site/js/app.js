@@ -8,18 +8,18 @@ define([
         init: function(){
             console.log('app init, fetching table data');
 
-            // init socket.io
-            var socket = io.connect('http://localhost');
-            socket.on('news', function (data) {
-                console.log(data);
-                socket.emit('my other event', { my: 'data' });
-            });
-
-            socket.on('reset', function(data){
-                console.log('receive message from other client' + data);
-            });
-
-            window.socket = socket;
+//            // init socket.io
+//            var socket = io.connect('http://localhost');
+//            socket.on('news', function (data) {
+//                console.log(data);
+//                socket.emit('my other event', { my: 'data' });
+//            });
+//
+//            socket.on('reset', function(data){
+//                console.log('receive message from other client' + data);
+//            });
+//
+//            window.socket = socket;
             $.getJSON('/api/table', function(data){
                 console.log('table data received, creating view');
                 var tableModel = new TableModel(data);
