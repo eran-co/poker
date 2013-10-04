@@ -24,38 +24,14 @@ app.configure( function() {
     app.use( express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-
 // bootstrap DB
 require('./server/config/db');
-
-var Player = require('./server/models/player').PlayerModel;
-
-var Table = require('./server/models/table').TableModel;
-
-//var table = Table.find({bet:30}, function (err, table) {
-//    console.log(table);
-//
-//    Player.find(function(err, players){
-//        players.forEach(function(elem, index){
-//           table.players.push(elem);
-//            console.log(elem);
-//            table.save();
-//        });
-//    });
-//});
 
 // Bootstrap routes
 require('./server/config/routes')(app);
 
-app.get('/table', function(req, res){
-    Table.findOne({bet:30}, function (err, table) {
-        res.send(table);
-    });
-});
-
 var port = 3001;
-//var server = http.createServer(app);
-//server.listen(8080);
+
 server.listen( port, function() {
     console.log( 'Express server listening on port %d in %s mode', port, app.settings.env );
 });
