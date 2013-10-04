@@ -15,10 +15,16 @@ define([
                 socket.emit('my other event', { my: 'data' });
             });
 
+            socket.on('reset', function(data){
+                console.log('receive message from other client' + data);
+            });
+
+            window.socket = socket;
             $.getJSON('/table', function(data){
                 console.log('table data received, creating view');
                 var tableModel = new TableModel(data);
                 var tableView = new TableView( {model:tableModel} );
+                window.table = tableView;
             });
         }
     };

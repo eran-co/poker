@@ -59,6 +59,10 @@ server.listen( port, function() {
 io.sockets.on('connection', function (socket) {
     socket.emit('news', { hello: 'world' });
     socket.on('my other event', function (data) {
-        console.log(data);
+        socket.broadcast.emit('reset', { data: data });
     });
+});
+
+io.sockets.on('my other event', function (socket) {
+    socket.emit('reset', { data: "data" });
 });

@@ -20,7 +20,9 @@ define([
 
             if (this.model){
                 this.renderPlayer();
+                this.reset();
                 return this;
+
             }
             else{
                 this.$el.children('.sit-button').show();
@@ -51,6 +53,9 @@ define([
                     $(card).attr('class', 'card rank' + cards[index]).html(Utils.getCardText(cards[index])).show();
                 });
             }
+        },
+        reset: function(){
+            this.model.set({'bet': 0, 'cards':[]});
         },
 
         sit: function(){

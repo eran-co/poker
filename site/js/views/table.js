@@ -15,6 +15,8 @@ define([
         initialize: function(options){
             this.model = options.model;
             this.playerCollection = this.model.get('playersCollection');
+            this.listenTo(this.playerCollection , 'add', this.addPlayer);
+            this.listenTo(this.playerCollection , 'remove', this.addPlayer);
             this.render();
         },
 
@@ -35,22 +37,38 @@ define([
             new PlayerView({el:'#player4', model: model4}).render();
             new PlayerView({el:'#player5', model: model5}).render();
             new PlayerView({el:'#player6', model: model6}).render();
+            this.updatePot(this.model.get('pot'));
 
         },
 
+        addPlayer: function(playerModel){
+            console.log(playerModel);
+        },
+
         drawFlop: function (cards){
-            $('#card1').attr('class', 'card rank' + cards[0]).html(Utils.getCardText(cards[0]));
-            $('#card2').attr('class', 'card rank' + cards[1]).html(Utils.getCardText(cards[1]));
-            $('#card3').attr('class', 'card rank' + cards[2]).html(Utils.getCardText(cards[2]));
+            $('#card1').attr('class', 'card rank' + cards[0]).html(Utils.getCardText(cards[0])).fadeIn('150');
+            $('#card2').attr('class', 'card rank' + cards[1]).html(Utils.getCardText(cards[1])).fadeIn('150');
+            $('#card3').attr('class', 'card rank' + cards[2]).html(Utils.getCardText(cards[2])).fadeIn('150');
 
         },
 
         drawTurn: function (card){
-            $('#card4').attr('class', 'card rank' + card).html(Utils.getCardText(card));
+            $('#card4').attr('class', 'card rank' + card).html(Utils.getCardText(card)).fadeIn('150');
         },
 
         drawRiver: function (card){
-            $('#card5').attr('class', 'card rank' + card).html(Utils.getCardText(card));
+            $('#card5').attr('class', 'card rank' + card).html(Utils.getCardText(card)).fadeIn('150');
+        },
+
+        updatePot: function(pot){
+            var potText = pot ? '$' + pot: '';
+            $('#pot').text(potText);
+        },
+
+        reset: function(){
+            // hide all deck cards
+            $('.cards').find('.card').hide().attr('class','').html('')
+
         }
     });
     return tableView;
