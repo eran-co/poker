@@ -20,7 +20,7 @@ define([
             });
 
             window.socket = socket;
-            $.getJSON('/table', function(data){
+            $.getJSON('/api/table', function(data){
                 console.log('table data received, creating view');
                 var tableModel = new TableModel(data);
                 var tableView = new TableView( {model:tableModel} );

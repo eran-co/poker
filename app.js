@@ -2,7 +2,6 @@ var application_root = __dirname,
     express = require( 'express' ), //Web framework
     path = require( 'path'),
     io = require('socket.io'),
-    db = require('./server/common/db'),
 //Create server
     app = express(),
     server = require('http').createServer(app),
@@ -26,6 +25,9 @@ app.configure( function() {
 });
 
 
+// bootstrap DB
+require('./server/config/db');
+
 var Player = require('./server/models/player').PlayerModel;
 
 var Table = require('./server/models/table').TableModel;
@@ -41,6 +43,9 @@ var Table = require('./server/models/table').TableModel;
 //        });
 //    });
 //});
+
+// Bootstrap routes
+require('./server/config/routes')(app);
 
 app.get('/table', function(req, res){
     Table.findOne({bet:30}, function (err, table) {
