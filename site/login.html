@@ -10,11 +10,21 @@
     <link rel="stylesheet" href="css/screen.css">
 </head>
 <body>
-<div class="main container">
-    <div class="ui two column aligned relaxed grid basic segment">
+<div id="login" class="main container">
+    <h1 class="ui dividing header">
+        Simple HTML 5 poker game
+    </h1>
+    <p>Trying to implement a fully functional poker game with modern web technologies.</p>
+    <div class="ui two column aligned relaxed grid basic middle segment">
         <div class="column">
             <div class="ui fluid form segment">
                 <h3 class="ui header">Log-in</h3>
+                <div class="ui warning message login-warning">
+                    <div class="header">
+                        Oops, something went wrong...
+                    </div>
+                    please check your user name and password and try again
+                </div>
                 <div class="field">
                     <label>Username</label>
                     <input placeholder="Username" name="username" type="text">

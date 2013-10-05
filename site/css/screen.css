@@ -2,6 +2,11 @@ body {
     background: rgb(236, 240, 241);
 }
 
+body #login{
+    font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    color: #555555;
+}
+
 .container{
     margin: auto;
     max-width: 1200px;

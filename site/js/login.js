@@ -8,6 +8,9 @@ $( document).ready(function(){
                 if (data.res){
                     window.location.href = '/';
                 }
+                else{
+                    $('.login-warning').show();
+                }
             });
         }
 
