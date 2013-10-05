@@ -2,6 +2,11 @@ body {
     background: rgb(236, 240, 241);
 }
 
+.container{
+    margin: auto;
+    max-width: 1200px;
+}
+
 .poker-table{
     background: url("../img/table.png") no-repeat ;
     height: 620px;

@@ -1,8 +1,7 @@
 var passport = require('passport')
 
 exports.getLoginPage = function(req, res){
-    //TODO return login page here
-    res.send('login page will be here')
+    res.sendfile('site/login.html');
 }
 
 exports.login = function(req, res, next) {

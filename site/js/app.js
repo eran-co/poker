@@ -20,7 +20,7 @@ define([
 //            });
 //
 //            window.socket = socket;
-            $.getJSON('/api/table', function(data){
+            $.getJSON('/api/tables/lala', function(data){
                 console.log('table data received, creating view');
                 var tableModel = new TableModel(data);
                 var tableView = new TableView( {model:tableModel} );

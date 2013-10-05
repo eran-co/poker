@@ -4,6 +4,11 @@ var users = require('../controllers/users')
 
 module.exports = function (app){
 
+    // main
+    app.get('/',  pass.ensureAuthenticated, function(req, res){
+        res.sendfile('site/index-static.html');
+    });
+
     // login and registration
     app.get('/login', users.getLoginPage);
 
@@ -19,5 +24,7 @@ module.exports = function (app){
     });
     
     // table routes
-    app.get('/api/table', pass.ensureAuthenticated, tables.getTable);
+    app.get('/api/tables', pass.ensureAuthenticated, tables.getTables);
+
+    app.get('/api/tables/:id', pass.ensureAuthenticated, tables.getTable);
 };

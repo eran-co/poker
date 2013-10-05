@@ -40,7 +40,13 @@ exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.send(401);
+    var isAjaxRequest = req.xhr;
+    if (isAjaxRequest){
+        res.send(401);
+    }
+    else {
+        res.redirect('/login');
+    }
 };
 
 
