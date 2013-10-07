@@ -16,7 +16,6 @@ app.configure( function() {
     //checks request.body for HTTP method overrides
     app.use( express.methodOverride() );
 
-
     //Where to serve static content
     app.use( express.static( path.join( application_root, 'site') ) );
 

@@ -5,6 +5,7 @@ require.config({
         underscore: "lib/underscore",
         backbone: "lib/backbone",
         rivets: 'lib/rivets',
+        handlebars: 'lib/handlebars',
         text: 'lib/text',
         socketio: 'lib/socket.io'
     },
@@ -18,7 +19,10 @@ require.config({
         },
         underscore: {
             'exports': '_'
-        }
+        },
+        'handlebars': {
+                exports: 'Handlebars'
+            }
     }
 });
 

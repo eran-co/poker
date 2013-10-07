@@ -9,7 +9,7 @@ exports.getTables = function(req, res){
 exports.getTable = function(req, res){
     var id = req.params.id;
     if (id){
-        console.log(id)
+        console.log('return table by id here');
     };
     //TODO return table by id
     Table.findOne({bet:30}, function (err, table) {

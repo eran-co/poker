@@ -7,8 +7,7 @@ define([
     'views/player',
     'config/utils',
     'text!views/templates/table.html',
-    'config/players'
-], function($, _, Backbone, rivets,PlayerModel,  PlayerView, Utils,  template,players){
+], function($, _, Backbone, rivets,PlayerModel,  PlayerView, Utils,  template){
     var tableView = Backbone.View.extend({
         el: '#table',
 

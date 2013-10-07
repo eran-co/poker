@@ -1,0 +1,30 @@
+<div class="ui segment">
+<h2 class="ui header">
+    Tables
+    <div class="sub header">choose a table to join</div>
+</h2>
+
+<table class="ui basic table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Bets</th>
+            <th>Players</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#each this}}
+    <tr>
+        <td>{{this.name}}</td>
+        <td>${{this.smallBlind}} / ${{this.bigBlind}}</td>
+        <td>{{this.activePlayers}} of {{this.maxPlayers}}</td>
+        <td><div class="ui tiny blue button join-table" data-game-id="{{this._id}}">
+            join
+        </div></td>
+    </tr>
+    {{/each}}
+
+    </tbody>
+</table>
+</div>
