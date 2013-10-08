@@ -1,5 +1,6 @@
-var users = require('../controllers/users')
-  , tables = require('../controllers/tables'),
+var user = require('../controllers/users'),
+    table = require('../controllers/tables'),
+    game = require('../controllers/game'),
     pass = require('../config/pass');
 
 module.exports = function (app){
@@ -10,13 +11,13 @@ module.exports = function (app){
     });
 
     // login and registration
-    app.get('/login', users.getLoginPage);
+    app.get('/login', user.getLoginPage);
 
-    app.post('/login', users.login, function(res, req){
+    app.post('/login', user.login, function(res, req){
         res.send('login successful');
     });
 
-    app.get('/logout', users.logout);
+    app.get('/logout', user.logout);
 
     // API
     app.get('/api', pass.ensureAuthenticated, function(req, res){
@@ -24,7 +25,9 @@ module.exports = function (app){
     });
     
     // table routes
-    app.get('/api/tables', pass.ensureAuthenticated, tables.getTables);
+    app.get('/api/tables', pass.ensureAuthenticated, table.getTables);
 
-    app.get('/api/tables/:id', pass.ensureAuthenticated, tables.getTable);
+    app.get('/api/tables/:id', pass.ensureAuthenticated, table.getTable);
+
+    app.get('/api/game/:id', pass.ensureAuthenticated, game.getGame )
 };

@@ -25,11 +25,16 @@ var tableData = {
 // create user
 //var userModel = require('./server/models/user').userModel;
 //
-//var user = new userModel({
-//    username:'eran',
-//    email:'shush6@gmail.com',
-//    password:'1234'
-//});
+var g = new Game({
+    pot: 0,
+    bet: 0,
+    flop:[],
+        turn: "",
+        river: "",
+        players: [],
+        table: ObjectId("5252bc2892d9b9371b000001") ,
+    dealer: 1
+});
 //
 //user.save( function( err ) {
 //    if( !err ) {

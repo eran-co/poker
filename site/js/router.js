@@ -1,6 +1,6 @@
 
 
-define(['jquery', 'backbone', 'views/tables', 'views/table', 'collections/tables'], function($, Backbone, TablesView, TableView, TableCollection){
+define(['jquery', 'backbone','models/game', 'views/tables', 'views/table', 'collections/tables'], function($, Backbone, GameModel, TablesView, TableView, TableCollection){
     var Router = Backbone.Router.extend({
 
         initialize: function(){
@@ -31,6 +31,11 @@ define(['jquery', 'backbone', 'views/tables', 'views/table', 'collections/tables
         },
         joinTable: function(id){
             console.log('joinTable called ' + id);
+
+            $.get('/api/game/' + id, function(data){
+                var gameModel = new GameModel(data);
+                var tableView = new TableView( {model:gameModel} );
+            })
         }
     });
     return Router;

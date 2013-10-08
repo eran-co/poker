@@ -25,7 +25,7 @@ define([
 
             }
             else{
-                this.$el.children('.sit-button').show();
+               // this.$el.children('.sit-button').show();
             }
         },
 

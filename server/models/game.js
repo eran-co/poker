@@ -3,16 +3,22 @@ var mongoose = require( 'mongoose'),
     tableSchema = require('./table').TableSchema;
 
 //Schemas
-var tableSchema = mongoose.Schema({
+var gameSchema = mongoose.Schema({
     pot: { type: Number, min: 0 },
     bet: { type: Number, min: 0 },
     flop: [String],
     turn: String,
     river: String,
     players: [PlayerSchema],
-    table: tableSchema,
+    table: { type: mongoose.Schema.ObjectId, ref: 'Table' } ,
     dealer: { type: Number, min: 1, max:6  }
 });
 
+//gameSchema.methods.join = function(player){
+//
+//    this.players.push(player);
+//
+//}
+
 //Model
-exports.GameModel = mongoose.model( 'Table', tableSchema );
+exports.GameModel = mongoose.model( 'Game', gameSchema );
