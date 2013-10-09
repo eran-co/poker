@@ -9,6 +9,7 @@ var userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true},
     balance: { type: Number, min: 0, required: true },
+    imageUrl: String,
     Player: {type: ObjectId, ref: PlayerSchema}
 });
 
@@ -23,6 +24,10 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 //        cb(null, isMatch);
 //    });
 };
+
+userSchema.methods.updateBalance = function(balance){
+    this.balance = this.balance + balance;
+}
 
 // Export user model
 var userModel = mongoose.model('User', userSchema);

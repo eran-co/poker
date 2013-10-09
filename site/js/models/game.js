@@ -1,25 +1,44 @@
 define(['backbone', 'models/player', 'collections/players', 'socketio'], function(Backbone, PlayerModel, PlayersCollection, socketio) {
     var gameModel = Backbone.Model.extend({
         initialize: function (options){
-                var playersCollection = new PlayersCollection();
-                options.players.forEach(function(player){
-                    playersCollection.push(new PlayerModel(player));
-                });
+            var self = this;
+
+            var playersCollection = new PlayersCollection();
+            options.players.forEach(function(player){
+                playersCollection.push(new PlayerModel(player));
+            });
+
+            this.set( {playersCollection: playersCollection} );
 
             var gameId = this.get('_id');
             // init socket.io
             var socket = socketio.connect('http://localhost');
             socket.on('welcome', function (data) {
-                console.log(data);
-                socket.emit('joinTable', { gameId: gameId  });
+                console.log(data.message);
+                socket.emit('joinGame', { gameId: gameId  });
             });
 
             socket.on('debug', function(data){
                 console.log(data.message);
             });
 
+            socket.on('addPlayer', function(data){
+                console.log(data.message + ": " + data.player);
+                playersCollection.push(new PlayerModel(data.player));
+            });
 
-            this.set( {playersCollection: playersCollection} );
+            socket.on('removePlayer', function(data){
+                console.log(data.message + ": " + data.playerId);
+                var player = playersCollection.findWhere({'_id':data.playerId});
+                playersCollection.remove(player);
+            });
+
+            this.socket = socket;
+        },
+
+        leaveGame: function(){
+            var gameId = this.get('_id');
+            this.socket.emit('leaveGame', { gameId: gameId  })
         }
     });
 

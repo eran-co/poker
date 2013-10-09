@@ -14,9 +14,13 @@ define([
         initialize: function(options){
             this.model = options.model;
             this.playerCollection = this.model.get('playersCollection');
-            //this.listenTo(this.playerCollection , 'add', this.addPlayer);
-            //this.listenTo(this.playerCollection , 'remove', this.addPlayer);
+            this.listenTo(this.playerCollection , 'add', this.addPlayer);
+            this.listenTo(this.playerCollection , 'remove', this.removePlayer);
             this.render();
+        },
+
+        events:{
+            'click .leave': 'leaveTable'
         },
 
         render: function(){
@@ -35,24 +39,26 @@ define([
 
             this.updatePot(this.model.get('pot'));
 
-            var model1 = this.playerCollection.findWhere({seat:1});
-            var model2 = this.playerCollection.findWhere({seat:2});
-            var model3 = this.playerCollection.findWhere({seat:3});
-            var model4 = this.playerCollection.findWhere({seat:4});
-            var model5 = this.playerCollection.findWhere({seat:5});
-            var model6 = this.playerCollection.findWhere({seat:6});
-            new PlayerView({el:'#player1', model: model1}).render();
-            new PlayerView({el:'#player2', model: model2}).render();
-            new PlayerView({el:'#player3', model: model3}).render();
-            new PlayerView({el:'#player4', model: model4}).render();
-            new PlayerView({el:'#player5', model: model5}).render();
-            new PlayerView({el:'#player6', model: model6}).render();
+            this.playerCollection.each(function(player){
+                this.addPlayer(player);
+            }.bind(this));
+        },
 
-
+        leaveTable: function(){
+            console.log('leaveTable called');
+            this.model.leaveGame();
         },
 
         addPlayer: function(playerModel){
-            console.log(playerModel);
+            console.log('adding player: '+playerModel);
+            var seat = playerModel.get('seat');
+            var playerView = new PlayerView({el:'#player' + seat, model: playerModel}).render();
+
+        },
+        removePlayer: function(playerModel){
+            console.log('removing player: '+playerModel);
+            var seat = playerModel.get('seat');
+            $('#player' + seat).hide();
         },
 
         drawFlop: function (cards){

@@ -61,6 +61,8 @@ io.set("authorization", passportSocketIo.authorize({
     }
 }));
 
+io.set('log level', 1);
+
 // Bootstrap sockets
 require('./server/config/sockets')(io);
 
