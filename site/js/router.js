@@ -3,8 +3,9 @@
 define(['jquery', 'backbone','models/game', 'views/tables', 'views/table', 'collections/tables'], function($, Backbone, GameModel, TablesView, TableView, TableCollection){
     var Router = Backbone.Router.extend({
 
-        initialize: function(){
+        initialize: function(options){
             var self = this;
+            this.user = options.user;
             $( document ).ajaxError(function(event, jqxhr, settings, exception) {
                 console.log('ajax error called on router:' + exception);
 
@@ -24,17 +25,18 @@ define(['jquery', 'backbone','models/game', 'views/tables', 'views/table', 'coll
         index: function(){
             console.log("index called");
             var tablesCollection = new TableCollection();
+            var user = this.user;
             tablesCollection.fetch({
                 success:function (){
-                    var tablesView = new TablesView( {collection: tablesCollection} );
+                    var tablesView = new TablesView( {collection: tablesCollection, user:user} );
                 }});
         },
         joinTable: function(id){
             console.log('joinTable called ' + id);
-
+            var user = this.user;
             $.get('/api/game/' + id, function(data){
                 var gameModel = new GameModel(data);
-                var tableView = new TableView( {model:gameModel} );
+                var tableView = new TableView( {model:gameModel, user:user} );
             })
         }
     });

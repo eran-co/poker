@@ -13,7 +13,14 @@ define([
 
         initialize: function(options){
             this.model = options.model;
+            this.user = options.user;
             this.playerCollection = this.model.get('playersCollection');
+
+            // listen to model changes
+            this.listenTo(this.model, 'drawFlop', this.drawFlop);
+            this.listenTo(this.model, 'drawTurn', this.drawTurn);
+            this.listenTo(this.model, 'drawRiver', this.drawRiver);
+
             this.listenTo(this.playerCollection , 'add', this.addPlayer);
             this.listenTo(this.playerCollection , 'remove', this.removePlayer);
             this.render();
@@ -24,7 +31,10 @@ define([
         },
 
         render: function(){
-            this.$el.html(template);
+            this.$el.html(template)
+
+            $('.user-name').text(this.user.username)
+
             if (this.model.get('flop')) {
                 this.drawFlop(this.model.get('flop'));
             }
@@ -53,7 +63,7 @@ define([
             console.log('adding player: '+playerModel);
             var seat = playerModel.get('seat');
             var playerView = new PlayerView({el:'#player' + seat, model: playerModel}).render();
-
+            $('#player' + seat).show();
         },
         removePlayer: function(playerModel){
             console.log('removing player: '+playerModel);

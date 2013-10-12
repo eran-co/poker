@@ -17,7 +17,9 @@ module.exports = function (app){
         res.send('login successful');
     });
 
-    app.get('/logout', user.logout);
+    app.get('/user', pass.ensureAuthenticated, user.getUser)
+
+    app.get('/logout', pass.ensureAuthenticated, user.logout);
 
     // API
     app.get('/api', pass.ensureAuthenticated, function(req, res){

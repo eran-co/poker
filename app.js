@@ -66,17 +66,3 @@ io.set('log level', 1);
 // Bootstrap sockets
 require('./server/config/sockets')(io);
 
-//io.sockets.on("connection", function(socket){
-//    console.log("user connected: ", socket.handshake.user.name);
-//});
-////socket.io test
-//io.sockets.on('connection', function (socket) {
-//    socket.emit('news', { hello: 'world' });
-//    socket.on('my other event', function (data) {
-//        socket.broadcast.emit('reset', { data: data });
-//    });
-//});
-//
-//io.sockets.on('my other event', function (socket) {
-//    socket.emit('reset', { data: "data" });
-//});

@@ -22,3 +22,9 @@ exports.logout = function(req, res) {
     req.logout();
     res.redirect('/');
 };
+
+exports.getUser = function(req, res){
+    var user = req.user.toJSON();
+    delete user.password;
+    res.send(user);
+};

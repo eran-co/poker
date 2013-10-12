@@ -9,7 +9,7 @@ define([
     ], function( $, Router, TableModel, TableCollection, TableView, TablesView, io ){
     var app = {
         init: function(){
-            console.log('app init, fetching table data');
+            //console.log('app init, fetching table data');
 
 //            // init socket.io
 //            var socket = io.connect('http://localhost');
@@ -29,8 +29,14 @@ define([
 //                var tableView = new TableView( {model:tableModel} );
 //                window.table = tableView;
 //            });
-            var router = new Router();
-            Backbone.history.start();
+
+            $.get('/user', function(user){
+                console.log(user);
+
+                var router = new Router({user: user});
+                Backbone.history.start();
+            })
+
 
 //            var collection = new TableCollection();
 //            collection.fetch({

@@ -33,6 +33,11 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
                 playersCollection.remove(player);
             });
 
+            socket.on('drawFlop', function(data){
+                self.set('flop', data.flop);
+                self.trigger('drawFlop', data.cards);
+            });
+
             this.socket = socket;
         },
 
