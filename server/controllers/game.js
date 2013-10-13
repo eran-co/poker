@@ -1,6 +1,8 @@
 var Game =  require('../models/game').GameModel,
     Table = require('../models/table').TableModel,
-    Player = require('../models/player').PlayerModel;
+    Player = require('../models/player').PlayerModel,
+    config = require('../bl/poker').config;
+
 
 exports.getGame = function (req, res){
     var tableId = req.params.id;
@@ -60,7 +62,11 @@ exports.joinGame = function(gameId, user, error,  next){
                         error(err);
                     }
                     else {
-                        next(player);
+                        next(player, gameId);
+
+//                        if (!game.isPlaying && game.players.length >= config.minPlayersInGame) {
+//                            //TODO start game here!
+//                        }
                     }
                 });
             }
@@ -75,8 +81,10 @@ exports.leaveGame = function(gameId, user, error,  next){
             error(err);
         }
         else {
-
-            for (i in game.players){
+            if (!game){
+                error('game was not found');
+            }
+            for (var i = 0; i < game.players.length; i++){
                 if (game.players[i].userId.id === user._id.id) {
                     var player = game.players[i];
                     user.updateBalance(player.balance);
@@ -85,25 +93,11 @@ exports.leaveGame = function(gameId, user, error,  next){
                     var playerId = player.id;
                     player.remove();
                     game.save();
-                    next(playerId);
+                    next(playerId, gameId);
                     return;
                 }
             }
             error('user not found');
-            //game.players.findOne({userId:user._id.id}, function( err, player ){
-
-//                if (err){
-//                    error(err);
-//                }
-//                else {
-//                    user.updateBalance(player.balance);
-//                    //TODO handle error?
-//                    user.save();
-//                    var seat = player.seat;
-//                    player.remove();
-//                    next(seat);
-//                }
-//            })
         }
     });
 }
