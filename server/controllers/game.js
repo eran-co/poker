@@ -11,25 +11,29 @@ exports.getGame = function (req, res){
         if (err){
             res.send(500, err);
         }
-
-        if (game){
-            game.findSeat();
-           res.send(game);
-        }
         // if game doesn't exist create it
-        else {
+        if (!game){
             var newGame = new Game({
                 table: tableId
             });
             newGame.save( function( err ) {
                 if( !err ) {
-                    return newGame;
+                    game = newGame;
                 }
                 else {
                     res.send(500, err);
                 }
             });
         }
+
+        // remove cards from other players
+        for (var i = 0; i < game.players.length; i++){
+            if (game.players[i].name != req.user.username ){
+                game.players[i].cards = [];
+            }
+        }
+
+        res.send(game);
     });
 };
 
