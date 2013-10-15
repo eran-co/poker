@@ -83,10 +83,23 @@ module.exports = function (io) {
                 games[gameId] = getGame(gameId);
             }
 
-
             console.log("received leave event from client" + data.gameId);
             games[gameId].removePlayer(socket.handshake.user);
-            // game.leaveGame( data.gameId, socket.handshake.user , error, removePlayer);
+        });
+
+        socket.on("action", function(data){
+            //find the game from the socket room. a socket should be registered exactly one room
+            var socketRooms = io.sockets.manager.roomClients[socket.id]
+            // the first value in the array is the general room, so we take the second one, which is our room
+            // we also strip the / socket.io adds for internal use
+            var gameId = Object.keys(socketRooms)[1].replace('/','');
+
+            if (!games[gameId]){
+                games[gameId] = getGame(gameId);
+            }
+
+            games[gameId].handleAction(socket.handshake.user, actionData);
+
         });
 
         socket.on('disconnect', function () {

@@ -70,7 +70,8 @@ define([
         },
 
         check: function(){
-            alert('not implemented yet, coming really soon');
+            alert('sent check');
+            this.model.sendAction({action:'check'});
         },
 
         call: function(){

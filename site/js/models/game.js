@@ -47,6 +47,10 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
             this.socket = socket;
         },
 
+        sendAction: function(data){
+            this.socket.emit('action', data);
+        },
+
         startRound: function ( game, cards ){
             var userId = this.get('user')._id,
                 smallBlind = this.get('table').smallBlind,
