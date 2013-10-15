@@ -34,7 +34,7 @@ exports.getGame = function (req, res){
         }
 
         res.send(game);
-    });
+    })
 };
 
 exports.joinGame = function(gameId, user, error,  next){

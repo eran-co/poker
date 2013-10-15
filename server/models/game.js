@@ -14,10 +14,10 @@ var gameSchema = mongoose.Schema({
     isPlaying: { type: Boolean, default:false },
     players: [PlayerSchema],
     table: { type: mongoose.Schema.ObjectId, ref: 'Table' } ,
-    dealer: String,
-    smallBlind: String,
-    bigBlind: String,
-    activePlayer: String
+    dealer: Number,
+    smallBlind: Number,
+    bigBlind: Number,
+    activePlayer: Number
 });
 
 gameSchema.static.GetGame = function (gameId) {

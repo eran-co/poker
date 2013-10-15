@@ -35,6 +35,7 @@ define(['jquery', 'backbone','models/game', 'views/tables', 'views/table', 'coll
             console.log('joinTable called ' + id);
             var user = this.user;
             $.get('/api/game/' + id, function(data){
+                data.user = user;
                 var gameModel = new GameModel(data);
                 var tableView = new TableView( {model:gameModel, user:user} );
             })

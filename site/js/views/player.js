@@ -9,6 +9,8 @@ define([
     var playerView = Backbone.View.extend({
         initialize: function(options){
             this.model = options.model;
+            this.listenTo(this.model, 'change:cards', this.drawCards);
+            //this.listenTo(this.model, 'setActive', this.setActive);
         },
 
         events:{
@@ -42,22 +44,27 @@ define([
             rivets.bind(this.$el, {player: this.model});
             var cards = this.model.get('cards');
             if (cards && cards.length > 0){
-                this.drawCards(this.model.get('cards'));
+                this.drawCards(null, this.model.get('cards'));
             }
             this.$el.children('.player').fadeIn(200);
         },
 
-        drawCards: function (cards){
-            if (cards){
+        drawCards: function (model, cards){
+            if (cards  && cards.length > 0){
                 var cardElm =  this.$el.find('.card').each(function(index, card){
                     $(card).attr('class', 'card rank' + cards[index]).html(Utils.getCardText(cards[index])).show();
                 });
             }
         },
+
+//        setActive: function(){
+//            this.$el.find('.player').addClass('active');
+//        },
+
         reset: function(){
             this.model.set({'bet': 0, 'cards':[]});
         },
-
+        //TODO not needed?
         sit: function(){
             alert('not implemented yet, coming soon!');
         }

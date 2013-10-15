@@ -30,7 +30,9 @@ module.exports = function (io) {
                 dealer: game.dealer,
                 smallBlind: game.smallBlind,
                 bigBlind: game.bigBlind,
-                activePlayer: game.activePlayer
+                activePlayer: game.activePlayer,
+                pot: game.pot,
+                bet: game.bet
             };
 
             var sockets = io.sockets.clients(game.id);

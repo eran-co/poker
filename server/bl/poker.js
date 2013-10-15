@@ -84,36 +84,32 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
             }
             else {
                 // reset game properties
-                game.pot = 0;
-                game.bet = 0;
+                //TODO calculate pot from actual blinds
+                game.pot = 150;
+                game.bet = 100;
                 game.flop = [];
                 game.turn = "";
                 game.river = "";
 
-                // set dealer
+                // set dealer, small and big blind, active player
                 // if dealer is already selected, move the dealer to the next player
-                sortPlayers(game.players);
                 if (game.dealer && !isNaN(game.dealer)){
-                    // find dealer and select the following player (or first if dealer is last)
-                    var dealerIndex = findPlayerIndex(game.players, game.dealer);
-                    // if dealer is last
-                    if (dealerIndex === game.players.length -1) {
-                        game.dealer = game.players[dealerIndex + 1].id;
-                    }
-                    else {
-                        game.dealer = game.players[0].id;
-                    }
-
+                    game.dealer = findNextPlayer(game.players, game.dealer);
                 }
                 // select the first player
                 else {
-                    game.dealer = game.players[0].id;
+                        game.dealer = game.players[0].seat;
                 }
+                //TODO check poker rules to see if we need special cases
+                game.smallBlind = findNextPlayer(game.players, game.dealer);
+                game.bigBlind = findNextPlayer(game.players, game.bigBlind);
+                game.activePlayer = findNextPlayer(game.players, game.bigBlind);
 
                 // populate deck
                 game.deck = getDeck();
 
                 // reset player properties and draw players cards
+                //TODO set blinds and reduce it from balane
                 for (var i = 0; i < game.players.length; i++){
                     var player = game.players[i];
                     player.bet = 0;
@@ -135,7 +131,7 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
                     }
                 });
 
-            };
+            }
         });
     };
 };
@@ -146,7 +142,7 @@ var getDeck = function () {
     deck.push('KS');
     deck.push('QS');
     deck.push('JS');
-    deck.push('TS');
+    deck.push('10S');
     deck.push('9S');
     deck.push('8S');
     deck.push('7S');
@@ -159,7 +155,7 @@ var getDeck = function () {
     deck.push('KH');
     deck.push('QH');
     deck.push('JH');
-    deck.push('TH');
+    deck.push('10H');
     deck.push('9H');
     deck.push('8H');
     deck.push('7H');
@@ -172,7 +168,7 @@ var getDeck = function () {
     deck.push('KD');
     deck.push('QD');
     deck.push('JD');
-    deck.push('TD');
+    deck.push('10D');
     deck.push('9D');
     deck.push('8D');
     deck.push('7D');
@@ -185,7 +181,7 @@ var getDeck = function () {
     deck.push('KC');
     deck.push('QC');
     deck.push('JC');
-    deck.push('TC');
+    deck.push('10C');
     deck.push('9C');
     deck.push('8C');
     deck.push('7C');
@@ -222,15 +218,21 @@ var findPlayerIndex = function (players, playerId){
     }
 };
 
-var findNextPlayer = function (players, playerId){
-    var player = -1;
+var findNextPlayer = function (players, seat){
+    var biggerSeats =  players.filter(function(player){
+        return player.seat > seat;
+    });
 
-    for (var i = 0; i < this.players.length; i++){
-        if (this.players[i].id === playerId){
-            player = i;
-        }
+    if (biggerSeats.length > 0){
+        sortPlayers(biggerSeats);
+        return biggerSeats[0].seat;
+    }
+    else{
+        sortPlayers(players);
+        return players[0].seat;
     }
 };
+
 module.exports = PokerGame;
 
 

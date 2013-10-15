@@ -38,6 +38,20 @@ body {
     border-radius: 5px;
     /*display: inline-block;*/
 }
+
+.player.fold {
+    opacity: 0.5;
+    position: absolute;
+    display: none !important;
+}
+
+.player.active{
+    border-width: 5px;
+    border-color: gold;
+    border-style: solid;
+    box-shadow: 1px 1px 1px 1px #383838;
+}
+
 .player .name{
     color: white;
     font-weight: bold;
