@@ -13,7 +13,9 @@ var playerSchema = mongoose.Schema({
     cards: [String],
     userId: { type: mongoose.Schema.ObjectId, ref: 'User' }
 });
-
+playerSchema.methods.isAllIn = function(bet){
+    return balance === bet;
+};
 //Model
 exports.PlayerSchema = playerSchema;
 exports.PlayerModel = mongoose.model( 'Player', playerSchema );

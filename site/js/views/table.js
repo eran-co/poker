@@ -19,6 +19,7 @@ define([
 
             // listen to model changes
             this.listenTo(this.model, 'startRound', this.startRound);
+            this.listenTo(this.model, 'performAction', this.performAction);
             this.listenTo(this.model, 'drawFlop', this.drawFlop);
             this.listenTo(this.model, 'drawTurn', this.drawTurn);
             this.listenTo(this.model, 'drawRiver', this.drawRiver);
@@ -66,11 +67,12 @@ define([
         },
 
         fold: function(){
-            alert('not implemented yet, coming really soon');
+            console.log('sent fold');
+            this.model.sendAction({action:'fold'});
         },
 
         check: function(){
-            alert('sent check');
+            console.log('sent check');
             this.model.sendAction({action:'check'});
         },
 
@@ -130,7 +132,6 @@ define([
 
             // show menu
             $('.player-actions').show();
-
         },
 
         hideActionMenu: function(){
@@ -142,9 +143,14 @@ define([
             var potText = pot ? '$' + pot: '';
             $('#pot').text(potText);
         },
+
         startRound: function(game, cards){
             this.reset();
             this.updatePot(game.pot);
+            this.setActivePlayer(game.activePlayer);
+        },
+
+        performAction: function(game, player){
             this.setActivePlayer(game.activePlayer);
         },
 

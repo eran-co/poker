@@ -9,7 +9,7 @@ module.exports = function (io) {
     io.sockets.on("connection", function(socket){
 
         var getGame = function (gameId){
-            return new PokerGame(gameId, error, addPlayer, removePlayer, startRound);
+            return new PokerGame(gameId, error, addPlayer, removePlayer, startRound, sendAction);
         };
         // callbacks which handles sending back answers
         var addPlayer = function(player, game){
@@ -50,8 +50,20 @@ module.exports = function (io) {
                     sockets[i].emit('startRound', {message:"start round", game: data, cards:cards});
                 });
             }
+        };
 
-              //  io.sockets.in(game.id).emit('startRound', {message:"start round", game: data});
+        var sendAction = function (game, player){
+            var gameData = {
+                activePlayer: game.activePlayer,
+                pot: game.pot,
+                bet: game.bet
+            };
+            var playerData = {
+                seat: player.seat,
+                bet: player.bet,
+                folded: player.folded
+            };
+            io.sockets.in(game.id).emit('tableAction', {message:"send table action", game:gameData, player: playerData});
         };
 
         var error = function(data){
@@ -89,7 +101,7 @@ module.exports = function (io) {
 
         socket.on("action", function(data){
             //find the game from the socket room. a socket should be registered exactly one room
-            var socketRooms = io.sockets.manager.roomClients[socket.id]
+            var socketRooms = io.sockets.manager.roomClients[socket.id];
             // the first value in the array is the general room, so we take the second one, which is our room
             // we also strip the / socket.io adds for internal use
             var gameId = Object.keys(socketRooms)[1].replace('/','');
@@ -98,8 +110,7 @@ module.exports = function (io) {
                 games[gameId] = getGame(gameId);
             }
 
-            games[gameId].handleAction(socket.handshake.user, actionData);
-
+            games[gameId].handleAction(socket.handshake.user, data);
         });
 
         socket.on('disconnect', function () {

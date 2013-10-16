@@ -64,6 +64,22 @@ gameSchema.methods.findSeat = function(){
     }
 };
 
+gameSchema.methods.getPlayerByUserId = function(userId){
+    for (var i = 0; i < this.players.length; i++){
+        if (this.players[i].userId.toString() === userId){
+            return this.players[i];
+        }
+    }
+    return null;
+};
+
+gameSchema.methods.isRoundEnded = function(){
+    var isRoundEnded = this.players.every(function(player){
+        return (player.folded || player.talked && player.bet === this.bet)
+    });
+    return isRoundEnded;
+};
+
 gameSchema.methods.isPlayerSitting = function(userId){
     var notSitting = this.players.every(function(player){
         return player.userId.id != userId.id;

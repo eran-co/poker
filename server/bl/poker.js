@@ -2,7 +2,7 @@ var Game =  require('../models/game').GameModel,
     Table = require('../models/table').TableModel,
     Player = require('../models/player').PlayerModel;
 
-var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartRound, cbFlop, cbTurn, cbRiver, cbWinner) {
+var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartRound, cbAction, cbFlop,  cbTurn, cbRiver, cbWinner) {
 
     var getDeck = function () {
         var deck = [];
@@ -87,8 +87,9 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
     };
 
     var findNextPlayer = function (players, seat){
+        //TODO refactor!!!!
         var biggerSeats =  players.filter(function(player){
-            return player.seat > seat;
+            return player.seat > seat && !player.folded;
         });
 
         if (biggerSeats.length > 0){
@@ -96,8 +97,11 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
             return biggerSeats[0].seat;
         }
         else{
-            sortPlayers(players);
-            return players[0].seat;
+            var smallerSeats =  players.filter(function(player){
+                return player.seat < seat && !player.folded;
+            });
+            sortPlayers(smallerSeats);
+            return smallerSeats[0].seat;
         }
     };
 
@@ -233,8 +237,84 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
     };
 
     this.handleAction = function(user, actionData){
+        Game.findById(gameId, function(err, game){
+            if (err){
+                console.log(err);
+                cbError(err);
+            }
+            else {
+                // check if it's the user turn
+                var player = game.getPlayerByUserId(user.id);
+                if (player.seat != game.activePlayer){
+                    cbError('player played out of turn!');
+                    return;
+                }
+
+                // handle action (check constrains)
+                switch (actionData.action) {
+                    case "fold":
+                        performFold (game, player);
+                        break;
+                    case "check":
+                        performCheck (game, player);
+                        break;
+                    case "call":
+                        performCall (game, player);
+                        break;
+                    case "raise":
+                        performRaise (game, player, actionData.amount);
+                        break;
+                    default:
+                        cbError('wrong action sent');
+                }
+            }
+        });
+    };
+    var performFold = function (game, player){
+        player.folded = true;
+        player.talked = true;
+        checkGameStatus(game, player);
+    };
+
+    var performCheck = function (game, player){
+        checkGameStatus(game, player);
+    };
+
+    var performCall = function (game, player){
+        checkGameStatus(game, player);
+    };
+
+    var performRaise = function (game, player){
+        checkGameStatus(game, player);
+    };
+
+    var checkGameStatus = function (game, player){
+        if (game.isRoundEnded()){
+            endRound(game);
+        }
+        else {
+           sendAction (game, player);
+        }
+    };
+
+    var endRound = function(game){
 
     };
+
+    var sendAction = function(game, player){
+        var nextPlayer = findNextPlayer(game.players, player.seat);
+        game.activePlayer = nextPlayer;
+        game.save(function (err){
+            if (err){
+                console.log(err);
+                cbError(err);
+            }
+            else {
+                cbAction(game, player);
+            }
+        });
+    }
+
 };
 
 module.exports = PokerGame;

@@ -39,6 +39,12 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
 
             });
 
+            socket.on('tableAction', function(data){
+                console.log(data.message);
+                that.trigger('performAction', data.game, data.player);
+            });
+
+            //TODO remove?
             socket.on('drawFlop', function(data){
                 that.set('flop', data.flop);
                 that.trigger('drawFlop', data.cards);
@@ -76,11 +82,11 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
                 else if (playerSeat === game.bigBlind){
                     player.set('bet', bigBlind);
                 }
-
-                // set active player
-                if (playerSeat === game.activePlayer){
-                    player.trigger('setActive');
-                }
+//
+//                // set active player
+//                if (playerSeat === game.activePlayer){
+//                    player.trigger('setActive');
+//                }
             });
 
             this.trigger('startRound', game, cards);
