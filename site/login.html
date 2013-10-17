@@ -52,28 +52,48 @@
             Or
         </div>
         <div class="column">
-            <div class="ui fluid form segment">
+
+            <div class="ui fluid register form segment">
+                <div class="ui dimmer">
+                    <div class="content">
+                        <div class="center">
+                            <h2 class="ui inverted icon header">
+                                <i class="icon circular inverted emphasized teal check"></i>
+                                account created successfully!
+                            </h2>
+                            <h3>you can log-in on the left</h3>
+                        </div>
+                    </div>
+                </div>
                 <h3 class="ui header">Register</h3>
-                <div class="two fields">
-                    <div class="field">
-                        <label>First Name</label>
-                        <input placeholder="First Name" type="text">
+                <div class="ui warning message register-warning">
+                    <div class="header">
+                        Oops, something went wrong...
                     </div>
-                    <div class="field">
-                        <label>Last Name</label>
-                        <input placeholder="Last Name" type="text">
-                    </div>
+                    <span class="message"></span>
                 </div>
                 <div class="field">
                     <label>Username</label>
-                    <input placeholder="Username" type="text">
+                    <div class="ui left labeled icon input">
+                        <input placeholder="Username" name="register-username" type="text">
+                        <i class="user icon"></i>
+                        <div class="ui corner label">
+                            <i class="icon asterisk"></i>
+                        </div>
+                    </div>
                 </div>
                 <div class="field">
                     <label>Password</label>
-                    <input type="password">
+                    <div class="ui left labeled icon input">
+                        <input type="password" name="register-password" placeholder="Password">
+                        <i class="lock icon"></i>
+                        <div class="ui corner label">
+                            <i class="icon asterisk"></i>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="ui blue submit button register">Submit</div>
+                <div class="ui red submit button register">Register</div>
             </div>
         </div>
     </div>

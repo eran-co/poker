@@ -1,10 +1,10 @@
 $( document).ready(function(){
 
     $('.login').click(function(){
-        var uname = $('input[name="username"]').val();
+        var username = $('input[name="username"]').val();
         var pass = $('input[name="password"]').val();
-        if (uname && pass){
-            $.post('/login', {username:uname, password:pass }, function(data){
+        if (username && pass){
+            $.post('/login', {username:username, password:pass }, function(data){
                 if (data.res){
                     window.location.href = '/';
                 }
@@ -16,8 +16,20 @@ $( document).ready(function(){
 
     });
 
-    $('.register').click(function(){
-        alert('not implemented yet');
+    $('.button.register').click(function(){
+        var username = $('input[name="register-username"]').val();
+        var pass = $('input[name="register-password"]').val();
+        if (username && pass){
+            $.post('/register', {username:username, password:pass }, function(data){
+                if (data.res){
+                    $('.register.form') .dimmer('toggle');
+                }
+                else{
+                    $('.register-warning .message').text(data.message);
+                    $('.register-warning').show();
+                }
+            });
+        }
     })
 
 });

@@ -13,7 +13,8 @@ define([
             this.collection = options.collection;
         },
         events:{
-            'click .button.join-table': 'joinTable'
+            'click .button.join-table': 'joinTable',
+            'click .log-out': 'logOut'
         },
 
         render: function(){
@@ -27,6 +28,13 @@ define([
             // TODO actually join the table
             var gameId = $(event.currentTarget).data('gameId');
             window.location.href= '#table/' + gameId;
+        },
+
+        logOut: function(){
+            $.get('/logout', function(data){
+                window.location.href = '/';
+            });
+
         }
     });
     return tablesView;

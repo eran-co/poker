@@ -277,15 +277,27 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
     };
 
     var performCheck = function (game, player){
-        checkGameStatus(game, player);
+
+        // "check"
+        if (player.bet === game.bet){
+            checkGameStatus(game, player);
+        }
     };
 
     var performCall = function (game, player){
-        checkGameStatus(game, player);
+        // verify player can call, TODO: if he can't, go all in and start a side pot
+        if (player.canCall(game.bet)){
+            checkGameStatus(game, player);
+        }
     };
 
     var performRaise = function (game, player){
         checkGameStatus(game, player);
+
+        // verify player can raise, TODO: if he can't,  go all in and start a side pot
+        if (player.canRaise(game.bet)){
+            sendAction (game, player);
+        }
     };
 
     var checkGameStatus = function (game, player){
@@ -298,7 +310,16 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
     };
 
     var endRound = function(game){
+        if (game.isGameEnded()){
+            // find winnner
 
+            // call win callback with winner details
+            cbWinner();
+        }
+        else{
+            // perform next action by game state
+            // options: flop, turn, river (bets starts with small blind)
+        }
     };
 
     var sendAction = function(game, player){

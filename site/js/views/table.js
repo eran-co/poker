@@ -121,6 +121,9 @@ define([
             if (activePlayer === this.playerCollection.findWhere({userId:this.user._id}).get('seat')){
                 this.showActionMenu();
             }
+            else {
+                this.hideActionMenu();
+            }
 
         },
 
