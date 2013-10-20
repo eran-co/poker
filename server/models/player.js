@@ -14,8 +14,20 @@ var playerSchema = mongoose.Schema({
     userId: { type: mongoose.Schema.ObjectId, ref: 'User' }
 });
 playerSchema.methods.isAllIn = function(bet){
-    return balance === bet;
+    return this.balance === bet;
 };
+
+playerSchema.methods.canCall = function(bet){
+    return this.balance >= bet;
+};
+
+playerSchema.methods.canRaise = function(bet, amount){
+    if (amount <= bet){
+        return false;
+    }
+    return this.balance >= amount;
+};
+
 //Model
 exports.PlayerSchema = playerSchema;
 exports.PlayerModel = mongoose.model( 'Player', playerSchema );

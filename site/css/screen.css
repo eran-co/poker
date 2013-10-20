@@ -59,6 +59,13 @@ body {
     text-align: center;
 }
 
+.player .position{
+    position: absolute;
+    width: 100%;
+    color: lightcyan;
+    background: rgba(0, 0, 0, 0.42);
+    text-align: center;
+}
 .player .balance {
     color: gold;
     font-weight: bold;

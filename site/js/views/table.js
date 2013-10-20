@@ -117,9 +117,10 @@ define([
             $('.player').removeClass('active');
             $('#player' + activePlayer).find('.player').addClass('active');
 
-            //TODO save player in view instead of getting it every time
-            if (activePlayer === this.playerCollection.findWhere({userId:this.user._id}).get('seat')){
-                this.showActionMenu();
+            //TODO save player in view instead of getting it every time?
+            var player = this.playerCollection.findWhere({userId:this.user._id});
+            if (activePlayer === player.get('seat')){
+                this.showActionMenu(player);
             }
             else {
                 this.hideActionMenu();
@@ -127,12 +128,30 @@ define([
 
         },
 
-        showActionMenu: function(){
+        showActionMenu: function(player){
+            var toCall = this.model.get('bet') - (player.bet || 0);
             // if there is a live bet change check to call
-            //TODO figure out where to take bet value from
+            if (toCall){
+                if (player.get('balance') > toCall){
+                    $('.player-actions .call').text('$' + toCall +  ' to').show();
+                    $('.player-actions .check').text('call');
+                }
+                else {
+                    $('.player-actions .call').text('$' + player.get('balance') +  ' to go').show();
+                    $('.player-actions .check').text('All in');
+
+                }
+            }
+            else{
+                $('.player-actions .call').hide();
+                $('.player-actions .check').text('check');
+            }
+
 
             // update raise input
-
+            //TODO get real big blind
+            var minRaise =  this.model.get('bet') || 100;
+            $('.raise.input input').val(minRaise);
             // show menu
             $('.player-actions').show();
         },

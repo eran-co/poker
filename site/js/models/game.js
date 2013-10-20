@@ -39,6 +39,12 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
 
             });
 
+//            socket.on('startBetRound', function(data){
+//                console.log(data.message + ": " + data.game);
+//                that.startBetRound(data.game);
+//
+//            });
+
             socket.on('tableAction', function(data){
                 console.log(data.message);
                 that.trigger('performAction', data.game, data.player);
@@ -53,11 +59,8 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
             this.socket = socket;
         },
 
-        sendAction: function(data){
-            this.socket.emit('action', data);
-        },
 
-        startRound: function ( game, cards ){
+        startRound: function ( game, cards ) {
             var userId = this.get('user')._id,
                 smallBlind = this.get('table').smallBlind,
                 bigBlind = this.get('table').bigBlind;
@@ -72,15 +75,17 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
 
                 // set dealer
                 if (playerSeat === game.dealer){
-
+                    player.set('position', 'dealer');
                 }
 
                 // set blinds
                 if (playerSeat === game.smallBlind){
                     player.set('bet', smallBlind);
+                    player.set('position', 'small blind');
                 }
                 else if (playerSeat === game.bigBlind){
                     player.set('bet', bigBlind);
+                    player.set('position', 'big blind');
                 }
 //
 //                // set active player
@@ -90,6 +95,15 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
             });
 
             this.trigger('startRound', game, cards);
+        },
+
+        startBetRound: function(game){
+
+            this.trigger('drawFlop', game.flop );
+        },
+
+        sendAction: function(data){
+            this.socket.emit('action', data);
         },
 
         leaveGame: function(){

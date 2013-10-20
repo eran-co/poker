@@ -190,10 +190,12 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
                 //TODO calculate pot from actual blinds
                 game.pot = 150;
                 game.bet = 100;
+                game.state = gameStates.preFlop;
                 game.flop = [];
                 game.turn = "";
                 game.river = "";
 
+                //TODO handle heads up game - see http://en.wikipedia.org/wiki/Betting_in_poker "When there are only two players"
                 // set dealer, small and big blind, active player
                 // if dealer is already selected, move the dealer to the next player
                 if (game.dealer && !isNaN(game.dealer)){
@@ -203,16 +205,16 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
                 else {
                         game.dealer = game.players[0].seat;
                 }
-                //TODO check poker rules to see if we need special cases
+                //TODO replace seat with actual player?
                 game.smallBlind = findNextPlayer(game.players, game.dealer);
-                game.bigBlind = findNextPlayer(game.players, game.bigBlind);
+                game.bigBlind = findNextPlayer(game.players, game.smallBlind);
                 game.activePlayer = findNextPlayer(game.players, game.bigBlind);
 
                 // populate deck
                 game.deck = getDeck();
 
                 // reset player properties and draw players cards
-                //TODO set blinds and reduce it from balane
+                //TODO set blinds and reduce it from balance
                 for (var i = 0; i < game.players.length; i++){
                     var player = game.players[i];
                     player.bet = 0;
@@ -283,36 +285,60 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
 
         // "check"
         if (player.bet === game.bet){
+            player.talked = true;
             checkGameStatus(game, player);
+        }
+        else{
+            cbError("player can't check, must call or raise!");
         }
     };
 
     var performCall = function (game, player){
         // verify player can call, TODO: if he can't, go all in and start a side pot
         if (player.canCall(game.bet)){
-            checkGameStatus(game, player);
+            player.balance = player.balance - game.bet;
+            player.talked = true;
+            game.pot = game.pot + game.bet;
         }
-    };
+        else{
+            game.pot = game.pot + player.balance;
+            player.talked = true;
+            player.balance = 0;
 
-    var performRaise = function (game, player){
+            //TODO start side pot
+        }
+
         checkGameStatus(game, player);
 
-        // verify player can raise, TODO: if he can't,  go all in and start a side pot
-        if (player.canRaise(game.bet)){
-            sendAction (game, player);
+    };
+
+    var performRaise = function (game, player, amount){
+        //TODO check/handle raise rules
+
+        if (player.canRaise(game.bet, amount)){
+            player.talked = true;
+            player.balance = player.balance - (amount - player.bet);
+            game.pot = game.pot + (amount - player.bet);
+            game.bet = amount;
+            checkGameStatus(game, player);
         }
+        else {
+            cbError("player can't raise!");
+        }
+
+
     };
 
     var checkGameStatus = function (game, player){
         if (game.isRoundEnded()){
-            endRound(game);
+            endRound(game, player);
         }
         else {
-           sendAction (game, player);
+           sendAction (game, player, false);
         }
     };
 
-    var endRound = function(game){
+    var endRound = function(game, player){
 
         // check for "default" winner - all other players folded
         var winner = game.findWinner();
@@ -321,13 +347,13 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
         }
         else{
             // if ended round is the flop calculate winner by hand
-            if (game.state = gameStates.river){
+            if (game.state === gameStates.river){
                 var remainingPlayers = game.findActivePlayers();
                 //TODO add cards propery/function to game that return an array of all 5 cards (flop+turn+river)
                 calculateWinnerByHand(game.cards, remainingPlayers);
             }
-            else{
-
+            else {
+                startNewBetRound(game, player);
             }
 
         }
@@ -337,7 +363,43 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
         cbWinner(winner);
     };
 
-    var sendAction = function(game, player){
+    var startNewBetRound = function(game, player) {
+        // reset player properties TODO refactor
+        for (var i =0; i < game.players.length; i++){
+            var player = game.players[i];
+            if (!player.folded && player.balance){
+                player.talked = false;
+                player.bet = 0;
+            }
+        }
+        game.bet = 0;
+
+        // set active player
+        //game.activePlayer = findNextPlayer(game.players, game.dealer);
+
+        switch (game.state) {
+            case gameStates.preFlop:
+                game.flop.push(game.deck.pop());
+                game.flop.push(game.deck.pop());
+                game.flop.push(game.deck.pop())
+                game.state = gameStates.flop;
+                break;
+            case gameStates.flop:
+                game.turn  = game.deck.pop();
+                game.state = gameStates.turn;
+                break;
+            case gameStates.turn:
+                game.river  = game.deck.pop();
+                game.state = gameStates.river;
+                break;
+            default:
+                cbError('wrong game state!');
+                break;
+        }
+        sendAction(game, player, true);
+    };
+
+    var sendAction = function(game, player, isNewBetRound){
         var nextPlayer = findNextPlayer(game.players, player.seat);
         game.activePlayer = nextPlayer;
         game.save(function (err){
@@ -346,10 +408,10 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
                 cbError(err);
             }
             else {
-                cbAction(game, player);
+                cbAction(game, player, isNewBetRound);
             }
         });
-    }
+    };
 
 };
 

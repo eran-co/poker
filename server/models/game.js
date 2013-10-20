@@ -4,6 +4,7 @@ var mongoose = require( 'mongoose'),
     //gameEngine = require('../bl/poker');
 
 var gameStates = {
+    notStarted: 0,
     preFlop: 1,
     flop: 2,
     turn: 3,
@@ -14,6 +15,7 @@ var gameStates = {
 var gameSchema = mongoose.Schema({
     pot: { type: Number, min: 0 },
     bet: { type: Number, min: 0 },
+    state: {type: Number, min: 0, default:0},
     flop: [String],
     turn: String,
     river: String,

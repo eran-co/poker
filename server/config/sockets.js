@@ -1,6 +1,7 @@
 var user = require('../controllers/users'),
     table = require('../controllers/tables'),
     game = require('../controllers/game'),
+    gameStates =  require('../models/game').states,
     PokerGame = require('../bl/poker');
 
 module.exports = function (io) {
@@ -52,18 +53,39 @@ module.exports = function (io) {
             }
         };
 
-        var sendAction = function (game, player){
+        var startBetRound = function(game){
+            var gameData = {
+                activePlayer: game.activePlayer,
+                pot: game.pot,
+                bet: game.bet,
+                state: game.state,
+                flop: game.flop,
+                turn:game.turn,
+                river: game.river
+            };
+            io.sockets.in(game.id).emit('startBetRound', {message:"send start bet round", game:gameData});
+        };
+
+        var sendAction = function (game, player, isNewBetRound){
             var gameData = {
                 activePlayer: game.activePlayer,
                 pot: game.pot,
                 bet: game.bet
             };
+
+            if (isNewBetRound){
+                gameData.state = game.state;
+                gameData.flop = game.flop;
+                gameData.turn = game.turn;
+                gameData.river = game.river;
+            }
             var playerData = {
                 seat: player.seat,
                 bet: player.bet,
-                folded: player.folded
+                folded: player.folded,
+                balance: player.balance
             };
-            io.sockets.in(game.id).emit('tableAction', {message:"send table action", game:gameData, player: playerData});
+            io.sockets.in(game.id).emit('tableAction', {message:"send table action", game:gameData, player: playerData, isNewBetRound: isNewBetRound});
         };
 
         var error = function(data){
