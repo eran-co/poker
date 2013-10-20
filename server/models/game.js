@@ -3,6 +3,13 @@ var mongoose = require( 'mongoose'),
     tableSchema = require('./table').TableSchema;
     //gameEngine = require('../bl/poker');
 
+var gameStates = {
+    preFlop: 1,
+    flop: 2,
+    turn: 3,
+    river: 4
+};
+
 //Schemas
 var gameSchema = mongoose.Schema({
     pot: { type: Number, min: 0 },
@@ -80,6 +87,27 @@ gameSchema.methods.isRoundEnded = function(){
     return isRoundEnded;
 };
 
+// check if the game ended and return the winner if it did
+gameSchema.methods.findWinner = function(){
+    var foldedCount = 0;
+    var winner = 0;
+    for (var i =0; i < this.players.length; i++){
+        if (this.players[i].folded){
+            foldedCount++;
+        }
+        else {
+            winner = this.players[i];
+        }
+    }
+
+    if (this.players.length === foldedCount + 1){
+        return winner;
+    }
+    else {
+        return null;
+    }
+};
+
 gameSchema.methods.isPlayerSitting = function(userId){
     var notSitting = this.players.every(function(player){
         return player.userId.id != userId.id;
@@ -130,6 +158,7 @@ gameSchema.methods.startRound = function(){
     // save game -- here?
 
 };
+exports.states = gameStates;
 
 //Model
 exports.GameModel = mongoose.model( 'Game', gameSchema );

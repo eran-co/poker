@@ -9,8 +9,9 @@ define([
         el: '#table',
 
         initialize: function(options){
-            this.render();
             this.collection = options.collection;
+            this.user = options.user;
+            this.render();
         },
         events:{
             'click .button.join-table': 'joinTable',
@@ -21,6 +22,7 @@ define([
             var template = Handlebars.compile(templateSource);
             var html    = template(this.collection.toJSON());
             this.$el.empty().html(html);
+            $('.user-name').text(this.user.username);
 
         },
         joinTable: function(event){
