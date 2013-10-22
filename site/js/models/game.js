@@ -47,7 +47,8 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
 
             socket.on('tableAction', function(data){
                 console.log(data.message);
-                that.trigger('performAction', data.game, data.player);
+                that.handleAction(data.game, data.player, data.isNewBetRound);
+                //that.trigger('performAction', data.game, data.player);
             });
 
             //TODO remove?
@@ -64,6 +65,8 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
             var userId = this.get('user')._id,
                 smallBlind = this.get('table').smallBlind,
                 bigBlind = this.get('table').bigBlind;
+
+            this.set({bet:game.bet});
 
             // update player models with data
             this.get('playersCollection').forEach(function(player){
@@ -87,19 +90,45 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
                     player.set('bet', bigBlind);
                     player.set('position', 'big blind');
                 }
-//
-//                // set active player
-//                if (playerSeat === game.activePlayer){
-//                    player.trigger('setActive');
-//                }
+                else{
+                    player.set('bet', 0);
+                }
             });
 
             this.trigger('startRound', game, cards);
         },
 
-        startBetRound: function(game){
+        handleAction: function(game, player, isNewBetRound){
+            // update player properties
+            var playerModel = this.get('playersCollection').findWhere({'seat':player.seat});
+            if (player.folded){
+                playerModel.set({folded: true});
+            }
+            else {
+                if (player.bet > playerModel.get('bet')){
+                    playerModel.set({bet: player.bet, balance: player.balance });
+                }
+            }
 
-            this.trigger('drawFlop', game.flop );
+            // update game properties
+            this.set({pot: game.pot, bet: game.bet});
+
+            // update other players if needed
+
+            // if new bet round reset needed properties & draw cards
+            if (isNewBetRound){
+                this.clearPlayerBets();
+            }
+            this.trigger('performAction', game, player, isNewBetRound);
+            //this.trigger('drawFlop', game.flop );
+        },
+
+        clearPlayerBets: function(){
+            this.get('playersCollection').forEach(function(player, index, array){
+                if (!player.folded){
+                    player.set({bet:0});
+                }
+            })
         },
 
         sendAction: function(data){

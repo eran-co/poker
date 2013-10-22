@@ -83,8 +83,9 @@ gameSchema.methods.getPlayerByUserId = function(userId){
 };
 
 gameSchema.methods.isRoundEnded = function(){
+    var gameBet = this.bet;
     var isRoundEnded = this.players.every(function(player){
-        return (player.folded || player.talked && player.bet === this.bet)
+        return (player.folded || player.talked && (player.bet === gameBet || player.balance === 0))
     });
     return isRoundEnded;
 };

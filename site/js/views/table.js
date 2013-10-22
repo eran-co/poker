@@ -34,7 +34,7 @@ define([
             'click .fold': 'fold',
             'click .check': 'check',
             'click .call': 'call',
-            'click .raise': 'raise'
+            'click .button.raise': 'raise'
         },
 
         render: function(){
@@ -68,20 +68,20 @@ define([
 
         fold: function(){
             console.log('sent fold');
-            this.model.sendAction({action:'fold'});
+            this.model.sendAction({action: 'fold'});
         },
 
         check: function(){
-            console.log('sent check');
-            this.model.sendAction({action:'check'});
-        },
+            var action = $('.player-actions .check').data('action');
+            console.log('sent ' + action);
+            this.model.sendAction({action: action});
 
-        call: function(){
-            alert('not implemented yet, coming really soon');
         },
 
         raise: function(){
-            alert('not implemented yet, coming really soon');
+            var amount = $('.raise.input input').val();
+            console.log('sent raise');
+            this.model.sendAction({action: 'raise', amount: amount});
         },
 
         addPlayer: function(playerModel){
@@ -129,9 +129,10 @@ define([
         },
 
         showActionMenu: function(player){
-            var toCall = this.model.get('bet') - (player.bet || 0);
+            var toCall = this.model.get('bet') - (player.get('bet') || 0);
             // if there is a live bet change check to call
             if (toCall){
+                $('.player-actions .check').data('action', 'call');
                 if (player.get('balance') > toCall){
                     $('.player-actions .call').text('$' + toCall +  ' to').show();
                     $('.player-actions .check').text('call');
@@ -144,13 +145,14 @@ define([
             }
             else{
                 $('.player-actions .call').hide();
+                $('.player-actions .check').data('action', 'check');
                 $('.player-actions .check').text('check');
             }
 
 
             // update raise input
             //TODO get real big blind
-            var minRaise =  this.model.get('bet') || 100;
+            var minRaise =  this.model.get('bet') ?  this.model.get('bet') * 2 : 100;
             $('.raise.input input').val(minRaise);
             // show menu
             $('.player-actions').show();
@@ -166,19 +168,50 @@ define([
             $('#pot').text(potText);
         },
 
+//        startRound: function(game, cards){
+//            this.reset();
+//            this.updatePot(game.pot);
+//            this.setActivePlayer(game.activePlayer);
+//        },
+
         startRound: function(game, cards){
-            this.reset();
+
             this.updatePot(game.pot);
+
+            if (game.river){
+                this.drawRiver(game.river)
+            }
+            else if (game.turn){
+                this.drawTurn(game.turn)
+            }
+            else if (game.flop){
+                this.drawFlop(game.flop)
+            }
+            else {
+                this.reset();
+            }
+
             this.setActivePlayer(game.activePlayer);
         },
 
-        performAction: function(game, player){
-            this.setActivePlayer(game.activePlayer);
+        performAction: function( game, player, isNewBetRound){
+
+            if (isNewBetRound){
+                this.startRound(game, null);
+            }
+            else {
+                this.updatePot(game.pot);
+                this.setActivePlayer(game.activePlayer);
+            }
         },
 
         reset: function(){
             // hide all deck cards
             $('.cards').find('.card').hide().attr('class','').html('');
+            // remove folded players mask
+            $('.player.fold').each(function(){
+                this.style.setProperty( 'display', 'none', 'important' );
+            })
 
         }
     });

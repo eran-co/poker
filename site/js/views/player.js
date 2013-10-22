@@ -10,6 +10,7 @@ define([
         initialize: function(options){
             this.model = options.model;
             this.listenTo(this.model, 'change:cards', this.drawCards);
+            this.listenTo(this.model, 'change:folded', this.fold);
             //this.listenTo(this.model, 'setActive', this.setActive);
         },
 
@@ -57,17 +58,22 @@ define([
             }
         },
 
+        fold: function(){
+            this.el.getElementsByClassName('fold')[0].style.setProperty( 'display', 'block', 'important' );
+            this.$el.find('.name').text('fold');
+            //this.el.style.setProperty( 'display', 'none', 'important' );
+        },
 //        setActive: function(){
 //            this.$el.find('.player').addClass('active');
 //        },
 
         reset: function(){
             this.model.set({'bet': 0, 'cards':[]});
-        },
-        //TODO not needed?
-        sit: function(){
-            alert('not implemented yet, coming soon!');
         }
+//        //TODO not needed?
+//        sit: function(){
+//            alert('not implemented yet, coming soon!');
+//        }
 
     });
 

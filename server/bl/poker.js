@@ -96,14 +96,14 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
 
         if (biggerSeats.length > 0){
             sortPlayers(biggerSeats);
-            return biggerSeats[0].seat;
+            return biggerSeats[0];
         }
         else{
             var smallerSeats =  players.filter(function(player){
                 return player.seat < seat && !player.folded;
             });
             sortPlayers(smallerSeats);
-            return smallerSeats[0].seat;
+            return smallerSeats[0];
         }
     };
 
@@ -187,34 +187,19 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
             }
             else {
                 // reset game properties
-                //TODO calculate pot from actual blinds
-                game.pot = 150;
-                game.bet = 100;
+                //TODO get actual blinds from table
+                var smallBlind = 50;
+                var bigBlind = 100;
+                game.pot = smallBlind + bigBlind;
+                game.bet = bigBlind;
                 game.state = gameStates.preFlop;
                 game.flop = [];
                 game.turn = "";
                 game.river = "";
 
-                //TODO handle heads up game - see http://en.wikipedia.org/wiki/Betting_in_poker "When there are only two players"
-                // set dealer, small and big blind, active player
-                // if dealer is already selected, move the dealer to the next player
-                if (game.dealer && !isNaN(game.dealer)){
-                    game.dealer = findNextPlayer(game.players, game.dealer);
-                }
-                // select the first player
-                else {
-                        game.dealer = game.players[0].seat;
-                }
-                //TODO replace seat with actual player?
-                game.smallBlind = findNextPlayer(game.players, game.dealer);
-                game.bigBlind = findNextPlayer(game.players, game.smallBlind);
-                game.activePlayer = findNextPlayer(game.players, game.bigBlind);
-
-                // populate deck
-                game.deck = getDeck();
+                //TODO remove players without money from the game (either mark as fold or call leave table callback)
 
                 // reset player properties and draw players cards
-                //TODO set blinds and reduce it from balance
                 for (var i = 0; i < game.players.length; i++){
                     var player = game.players[i];
                     player.bet = 0;
@@ -224,6 +209,30 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
                     player.cards.push(game.deck.pop());
                     player.cards.push(game.deck.pop());
                 }
+
+                //TODO handle heads up game - see http://en.wikipedia.org/wiki/Betting_in_poker "When there are only two players"
+                // set dealer, small and big blind, active player
+                // if dealer is already selected, move the dealer to the next player
+                if (game.dealer && !isNaN(game.dealer)){
+                    game.dealer = findNextPlayer(game.players, game.dealer).seat;
+                }
+                // select the first player
+                else {
+                        game.dealer = game.players[0].seat;
+                }
+                //update blinds
+                var smallBlindPlayer = findNextPlayer(game.players, game.dealer);
+                smallBlindPlayer.bet = smallBlind;
+                smallBlindPlayer.balance -= smallBlind;
+                game.smallBlind =smallBlindPlayer.seat;
+                var bigBlindPlayer = findNextPlayer(game.players, game.smallBlind);
+                bigBlindPlayer.bet = bigBlind;
+                bigBlindPlayer.balance -= bigBlind;
+                game.bigBlind = bigBlindPlayer.seat;
+                game.activePlayer = findNextPlayer(game.players, game.bigBlind).seat;
+
+                // populate deck
+                game.deck = getDeck();
 
                 // change game status to playing
 
@@ -295,14 +304,17 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
 
     var performCall = function (game, player){
         // verify player can call, TODO: if he can't, go all in and start a side pot
-        if (player.canCall(game.bet)){
-            player.balance = player.balance - game.bet;
+        var sumToCall = game.bet - player.bet;
+        if (player.canCall(sumToCall)){
+            player.balance = player.balance - sumToCall;
             player.talked = true;
-            game.pot = game.pot + game.bet;
+            player.bet = game.bet;
+            game.pot += sumToCall;
         }
         else{
-            game.pot = game.pot + player.balance;
+            game.pot += player.balance;
             player.talked = true;
+            player.bet += player.balance;
             player.balance = 0;
 
             //TODO start side pot
@@ -317,8 +329,10 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
 
         if (player.canRaise(game.bet, amount)){
             player.talked = true;
-            player.balance = player.balance - (amount - player.bet);
-            game.pot = game.pot + (amount - player.bet);
+            var raise = (amount - player.bet);
+            player.balance = player.balance - raise;
+            player.bet = amount;
+            game.pot = game.pot + raise;
             game.bet = amount;
             checkGameStatus(game, player);
         }
@@ -400,7 +414,7 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
     };
 
     var sendAction = function(game, player, isNewBetRound){
-        var nextPlayer = findNextPlayer(game.players, player.seat);
+        var nextPlayer = findNextPlayer(game.players, player.seat).seat;
         game.activePlayer = nextPlayer;
         game.save(function (err){
             if (err){

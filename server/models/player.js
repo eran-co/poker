@@ -21,8 +21,9 @@ playerSchema.methods.canCall = function(bet){
     return this.balance >= bet;
 };
 
+//TODO enforce real raise rules
 playerSchema.methods.canRaise = function(bet, amount){
-    if (amount <= bet){
+    if (amount < bet){
         return false;
     }
     return this.balance >= amount;
