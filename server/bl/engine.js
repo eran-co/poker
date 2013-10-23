@@ -42,7 +42,6 @@ var engine = function(){
             if (Number.isNaN(rank)){
                 rank = parseInt(card[0].replace('T', '10').replace('J','11').replace('Q','12').replace('K','13').replace('A', 14));
             }
-
             if (arraysEqual(ranks, [14, 5, 4, 3, 2])){
                 return [5, 4, 3, 2, 1];
             }
@@ -52,7 +51,6 @@ var engine = function(){
         });
 
         ranks.sort(sortDesc);
-
         return ranks;
     };
 
@@ -90,8 +88,8 @@ var engine = function(){
             return false;
         }
         else {
-            ranks.sort(sortAsc);
-            var lowPair = kind(2,ranks);
+            var reversedRanks = ranks.slice(0).reverse();
+            var lowPair = kind(2,reversedRanks);
 
             if (lowPair != highPair){
                 return [highPair, lowPair];
@@ -99,6 +97,49 @@ var engine = function(){
             else {
                 return false;
             }
+        }
+    };
+
+    /*
+        return a value indicating the ranking of a hand. ranks:
+         0- High Card
+         1- One Pair
+         2- Two Pair
+         3- Three of a Kind
+         4- Straight
+         5- Flush
+         6- Full House
+         7- Four of a Kind
+         8- Straight Flush
+     */
+    var handRank = function(hand) {
+        var ranks = cardRanks(hand);
+        if (straight(ranks) && flush(hand)){
+            return [8, ranks[0]];
+        }
+        else if (kind(4, ranks)) {
+            return [7, kind(4, ranks)];
+        }
+        else if (kind(3, ranks) && kind(2, ranks)) {
+            return [6, kind(3, ranks)];
+        }
+        else if (flush(hand)){
+            return [5, ranks];
+        }
+        else if (straight(ranks)) {
+            return [4, ranks[0]];
+        }
+        else if (kind(3, ranks)) {
+            return [3,kind(3, ranks), ranks ];
+        }
+        else if (twoPair(ranks)) {
+            return [2, twoPair(ranks), ranks];
+        }
+        else if (kind(2, ranks)) {
+            return [1, kind(2, ranks), ranks];
+        }
+        else {
+            return [0, ranks];
         }
     };
 
@@ -158,8 +199,11 @@ var engine = function(){
         assert(arraysEqual(twoPair(cardRanks(twoPairs)),[5, 2]), "two pairs check failed" );
         assert(twoPair(cardRanks(straightFlush2)) === false , "two pairs check failed" );
 
-        // assert kind(3, card_ranks(sf1)) == None
-         //assert kind(4, card_ranks(fk)) == 9
+        // Testing hand rank
+        assert(arraysEqual(handRank(straightFlush2), [8,10]), 'hand rank failed');
+        assert(arraysEqual(handRank(fourKind), [7,9]), 'hand rank failed');
+        assert(arraysEqual(handRank(fullHouse), [6,10]), 'hand rank failed');
+
 //
 //        // Testing allmax
 //         assert allmax([2,4,7,5,1]) == [7]
@@ -168,20 +212,7 @@ var engine = function(){
 //         assert allmax([0,0,0]) == [0,0,0]
 //
 
-//    // Testing hand rank
-//         assert hand_rank(sf1) == (8,10)
-//         assert hand_rank(fk) == (7,9,7)
-//         assert hand_rank(fh) == (6,10,7)
-//
-//    // Testing hand rank alt
-//         assert hand_rank_alt(sf1) == (8, (10,9,8,7,6))
-//         assert hand_rank_alt(fk) == (7,(9,7))
-//         assert hand_rank_alt(fh) == (6,(10,7))
-//
-//    // Testing hand rank table
-//         assert hand_rank_table(sf1) == (9, (10,9,8,7,6))
-//         assert hand_rank_table(fk) == (7,(9,7))
-//         assert hand_rank_table(fh) == (6,(10,7))
+
 //
 //    // Testing poker
 //         assert poker([sf1, fk, fh]) == [sf1]
