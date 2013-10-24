@@ -1,6 +1,60 @@
 var assert = require('assert');
 
+var handTypes = [
+    'High Card',
+    'One Pair',
+    'Two Pairs',
+    'Three of a Kind',
+    'Straight',
+    'Flush',
+    'Full House',
+    'Four of a Kind',
+    'Straight Flush'
+];
+
 var engine = function(){
+
+    // return the players with the best hand
+    this.findWinners = function (players){
+        findsAllPlayerBestHand(players);
+        var winners = allMax(findBestHands(players));
+        var result = {
+            players: winners,
+            hand: winners[0].bestHand,
+            type: handTypes[winners[0].rank[0]]
+        };
+
+        return result;
+    };
+
+    // return all winner players
+    var allMax = function (players){
+        var maxPlayer = players[0];
+        var max = players.filter(function(player){
+            return handComparator(maxPlayer, player) === 0;
+        });
+        return max;
+    };
+
+    // adds best hand to the player array
+    var findsAllPlayerBestHand = function (players) {
+        for (var i = 0; i < players.length; i++) {
+            var playerHand = findPlayerBestHand(players[i].hand);
+            players[i].bestHand = playerHand.hand;
+            players[i].rank = playerHand.rank;
+        }
+    };
+
+    // get 7 card hand and return the best 5 card hand with it's rank
+    var findPlayerBestHand = function (sevenCardsHand) {
+        var hands = handCombinations (sevenCardsHand, 5);
+        var hands = hands.map(function (hand){
+            return {hand: hand, rank:handRank(hand)};
+        });
+        var bestRank = findBestHands(hands);
+        return bestRank[0];
+
+    };
 
     // return all combinations of a hand
     var handCombinations = function(set, k) {
@@ -34,6 +88,23 @@ var engine = function(){
         return combs;
     };
 
+    // return sorted array by hand ranks
+    var findBestHands = function (hands){
+        hands.sort(handComparator);
+        return hands;
+    };
+
+    var compareRanksArrays = function (a,b) {
+        if (!a || !b) {
+            return 0;
+        }
+        for (var i =0; i < a.length && b.length; i++){
+            if (a[i] != b[i]){
+                return b[i] - a[i];
+            }
+        }
+        return 0;
+    };
     // return array with the cards rank (sorted)
     var cardRanks = function(hand) {
         var ranks = hand.map(function(card){
@@ -158,6 +229,21 @@ var engine = function(){
         return true;
     };
 
+    var handComparator = function(a, b){
+        if (a.rank[0] != b.rank[0] ){
+            return b.rank[0] - a.rank[0];
+        }
+        else if (a.rank[1] != b.rank[1] && !Array.isArray(a.rank[1]) && !Array.isArray(b.rank[1])) {
+            return b.rank[1] - a.rank[1];
+        }
+        else if (Array.isArray(a.rank[1]) && Array.isArray(b.rank[1]) ){
+            return compareRanksArrays(a.rank[1], b.rank[1]) ||  compareRanksArrays(a.rank[2], b.rank[2]);
+        }
+        else {
+            return 0;
+        }
+    };
+
     var sortDesc = function(a,b){
             return b - a;
     };
@@ -169,11 +255,14 @@ var engine = function(){
     this.testEngine = function(){
         console.log('starting engine tests');
         //Test cases for the functions in poker program
-        var straightFlush1 = ['6C', '7C', '8C', '9C', '9C', 'TC', 'KD']; //Straight Flush
+        var straightFlush1 = ['6C', '7C', '8C', '9C', '9D', 'TC', 'KD']; //Straight Flush
         var straightFlush2 = ['6D', '7D', '8D' ,'9D' ,'TD']; //Straight Flush
         var fourKind = ['9D', '9H', '9S', '9C', '7D']; //Four of a Kind
         var fullHouse = ['TD', 'TC', 'TH', '7C', '7D']; //Full House
         var twoPairs = ['5D', '2C', '2H', '9H', '5C']; //Two Pair
+        var twoPairs2 = ['5D', '2C', '2H', '9H', '5C', '9D', 'KS']; //Two Pair
+        var smallerTwoPairs = ['5D', '2C', '2H', '7H', '5C']; //Two Pair
+        var fullHouse2 = ['TD', 'TC', 'TH', '7C', '7D','KS', 'AS']; //Full House
 
          // testing handCombinations - result should be 21: C (7,5) = 21
         assert(handCombinations(straightFlush1, 5).length === 21, "handCombinations failed");
@@ -204,7 +293,26 @@ var engine = function(){
         assert(arraysEqual(handRank(fourKind), [7,9]), 'hand rank failed');
         assert(arraysEqual(handRank(fullHouse), [6,10]), 'hand rank failed');
 
+        // test findPlayerBestHand
+        assert(arraysEqual(findPlayerBestHand(straightFlush1).rank, [8,10]), 'findBestHands failed');
+        //assert(arraysEqual(findPlayerBestHand(twoPairs2), [ 2, [ 9, 5 ], [ 13, 9, 9, 5, 5 ] ]), 'findBestHands failed'); - fails only because arraysEqual method
 //
+        // test findsAllPlayerBestHand
+        var players = [];
+        players.push({hand:twoPairs2});
+        players.push({hand:straightFlush1});
+        findsAllPlayerBestHand(players);
+        assert (arraysEqual(players[1].rank, [8,10]), 'findsAllPlayerBestHand failed' );
+
+        // test find winners
+        var players = [];
+        players.push({hand:twoPairs2});
+        players.push({hand:straightFlush1});
+       // assert (arraysEqual(this.findWinners(players)[0].rank, [8,10]), 'findWinners failed' );
+        var winners = this.findWinners(players);
+        console.log(winners);
+
+
 //        // Testing allmax
 //         assert allmax([2,4,7,5,1]) == [7]
 //         assert allmax([2,4,7,5,7]) == [7,7]

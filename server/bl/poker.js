@@ -1,10 +1,11 @@
 var Game =  require('../models/game').GameModel,
     gameStates =  require('../models/game').states,
     Table = require('../models/table').TableModel,
-    Player = require('../models/player').PlayerModel;
+    Player = require('../models/player').PlayerModel,
+    Engine = require('./engine');
 
 
-var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartRound, cbAction, cbFlop,  cbTurn, cbRiver, cbWinner) {
+var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartRound, cbAction, cbWinner) {
 
     var getDeck = function () {
         var deck = [];
@@ -357,14 +358,17 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
         // check for "default" winner - all other players folded
         var winner = game.findWinner();
         if (winner){
-            handleWin(winner);
+            var winners = {
+                players:[{id: winner.id}]
+            };
+            handleWin(game, winners);
         }
         else{
             // if ended round is the flop calculate winner by hand
             if (game.state === gameStates.river){
                 var remainingPlayers = game.findActivePlayers();
                 //TODO add cards propery/function to game that return an array of all 5 cards (flop+turn+river)
-                calculateWinnerByHand(game.cards, remainingPlayers);
+                calculateWinner(game, game.getFullHand(), remainingPlayers);
             }
             else {
                 startNewBetRound(game, player);
@@ -372,9 +376,36 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
 
         }
     };
+    var calculateWinner = function(game, hand, remainingPlayers) {
+        var players = remainingPlayers.map(function(player){
+            return {
+                id: player.id,
+                seat: player.seat,
+                hand: hand.concat(player.cards)
+            }
+        });
+        var engine = new Engine();
+        var winners = engine.findWinners(players);
+        handleWin(game, winners);
+    };
+    var handleWin = function(game, winners){
+        var numOfWinners = winners.players.length;
+        var prize = game.pot / numOfWinners;
 
-    var handleWin = function(game, winner){
-        cbWinner(winner);
+        for (var i = 0; i < winners.players.length; i++){
+            game.players.id(winners.players[i].id).balance += prize;
+        }
+
+        winners.prize = prize;
+        game.save(function (err){
+            if (err){
+                console.log(err);
+                cbError(err);
+            }
+            else {
+                cbWinner(game, winners);
+            }
+        });
     };
 
     var startNewBetRound = function(game, player) {

@@ -51,6 +51,12 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
                 //that.trigger('performAction', data.game, data.player);
             });
 
+            socket.on('win', function(data){
+                console.log(data.message);
+                //that.handleAction(data.game, data.player, data.isNewBetRound);
+                //that.trigger('performAction', data.game, data.player);
+            });
+
             //TODO remove?
             socket.on('drawFlop', function(data){
                 that.set('flop', data.flop);

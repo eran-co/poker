@@ -10,7 +10,7 @@ module.exports = function (io) {
     io.sockets.on("connection", function(socket){
 
         var getGame = function (gameId){
-            return new PokerGame(gameId, error, addPlayer, removePlayer, startRound, sendAction);
+            return new PokerGame(gameId, error, addPlayer, removePlayer, startRound, sendAction, sendWin);
         };
         // callbacks which handles sending back answers
         var addPlayer = function(player, game){
@@ -86,6 +86,11 @@ module.exports = function (io) {
                 balance: player.balance
             };
             io.sockets.in(game.id).emit('tableAction', {message:"send table action", game:gameData, player: playerData, isNewBetRound: isNewBetRound});
+        };
+
+        var sendWin = function(game, winners){
+            io.sockets.in(game.id).emit('win', {message:"send win action", game:game, winners:winners});
+            setTimeout( games[game.id].startRound(), 5000);
         };
 
         var error = function(data){

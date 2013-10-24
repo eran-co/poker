@@ -118,6 +118,21 @@ gameSchema.methods.isPlayerSitting = function(userId){
     return !notSitting;
 };
 
+gameSchema.methods.findActivePlayers = function(){
+    return this.players.filter(function(player){
+        return !player.folded;
+    });
+};
+
+gameSchema.methods.getFullHand = function(){
+    if (this.flop && this.river && this.turn){
+        return this.flop.slice(0).concat( [this.river, this.turn] );
+    }
+    else{
+        return []
+    }
+};
+
 gameSchema.methods.startRound = function(){
     // reset game properties
     this.pot = 0;
