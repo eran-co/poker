@@ -1,7 +1,7 @@
 var application_root = __dirname,
     express = require( 'express' ), //Web framework
     path = require( 'path'),
-    passport = require('passport')
+    passport = require('passport'),
     io = require('socket.io'),
     passportSocketIo = require("passport.socketio"),
     MemoryStore = new require('express').session.MemoryStore,
@@ -44,7 +44,7 @@ require('./server/config/routes')(app);
 
 var port = 3001;
 
-server.listen( port, function() {
+server.listen( process.env.PORT || port, process.env.IP || "0.0.0.0", function() {
     console.log( 'Express server listening on port %d in %s mode', port, app.settings.env );
 });
 
