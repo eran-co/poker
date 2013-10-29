@@ -358,10 +358,14 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
         // check for "default" winner - all other players folded
         var winner = game.findWinner();
         if (winner){
-            var winners = {
-                players:[{id: winner.id}]
+            var win = {
+                players:[{
+                        id: winner.id,
+                        seat: winner.seat
+                    }
+                ]
             };
-            handleWin(game, winners);
+            handleWin(game, win);
         }
         else{
             // if ended round is the flop calculate winner by hand
@@ -381,29 +385,30 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
             return {
                 id: player.id,
                 seat: player.seat,
+                cards: player.cards,
                 hand: hand.concat(player.cards)
             }
         });
         var engine = new Engine();
-        var winners = engine.findWinners(players);
-        handleWin(game, winners);
+        var win = engine.findWinners(players);
+        handleWin(game, win);
     };
-    var handleWin = function(game, winners){
-        var numOfWinners = winners.players.length;
+    var handleWin = function(game, win){
+        var numOfWinners = win.players.length;
         var prize = game.pot / numOfWinners;
 
-        for (var i = 0; i < winners.players.length; i++){
-            game.players.id(winners.players[i].id).balance += prize;
+        for (var i = 0; i < win.players.length; i++){
+            game.players.id(win.players[i].id).balance += prize;
         }
 
-        winners.prize = prize;
+        win.prize = prize;
         game.save(function (err){
             if (err){
                 console.log(err);
                 cbError(err);
             }
             else {
-                cbWinner(game, winners);
+                cbWinner(game, win);
             }
         });
     };

@@ -6,8 +6,9 @@ define([
     'models/player',
     'views/player',
     'config/utils',
-    'text!views/templates/table.html'
-], function($, _, Backbone, rivets,PlayerModel,  PlayerView, Utils,  template){
+    'text!views/templates/table.html',
+    'odometer'
+], function($, _, Backbone, rivets,PlayerModel,  PlayerView, Utils,  template, odometer){
     var tableView = Backbone.View.extend({
         el: '#table',
 
@@ -23,6 +24,7 @@ define([
             this.listenTo(this.model, 'drawFlop', this.drawFlop);
             this.listenTo(this.model, 'drawTurn', this.drawTurn);
             this.listenTo(this.model, 'drawRiver', this.drawRiver);
+            this.listenTo(this.model, 'win', this.win);
 
             this.listenTo(this.playerCollection , 'add', this.addPlayer);
             this.listenTo(this.playerCollection , 'remove', this.removePlayer);
@@ -91,6 +93,7 @@ define([
             var playerView = new PlayerView({el:'#player' + seat, model: playerModel}).render();
             $('#player' + seat).show();
         },
+
         removePlayer: function(playerModel){
             console.log('removing player: '+playerModel);
             var seat = playerModel.get('seat');
@@ -165,7 +168,7 @@ define([
 
         updatePot: function(pot){
             var potText = pot ? '$' + pot: '';
-            $('#pot').text(potText);
+            $('#pot').text(potText).show();
         },
 
 //        startRound: function(game, cards){
@@ -173,6 +176,35 @@ define([
 //            this.updatePot(game.pot);
 //            this.setActivePlayer(game.activePlayer);
 //        },
+        win: function(game, win){
+            // mark winner player (title for now)
+
+            // display winning hand if any (show cards, write on table, highlight cards?)
+
+            // pay pot
+            this.payPot(win);
+        },
+
+        payPot: function (win) {
+
+            var i = 0;
+
+            var player = win.players[i];
+            // clone pot and set it's amount for each winner
+            var pot = $('#pot').hide().clone().removeAttr('id').show().text('$250');
+            $('#pot').parent().append(pot);
+
+            // find balance position of each winner
+            var position = $('#player' + player.seat).position();
+            var left = '+=' + (position.left - pot.position().left);
+            var top = '+=' + (position.top - pot.position().top);
+            // animate pot to balance position
+            pot.animate({left:left, top:top}, 'slow', function(){
+                pot.remove();
+            });
+
+            // hide animated pot, increase winner balance
+        },
 
         startRound: function(game, cards){
 

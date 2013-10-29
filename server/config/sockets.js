@@ -89,8 +89,11 @@ module.exports = function (io) {
         };
 
         var sendWin = function(game, winners){
-            io.sockets.in(game.id).emit('win', {message:"send win action", game:game, winners:winners});
-            setTimeout( games[game.id].startRound(), 5000);
+            io.sockets.in(game.id).emit('win', {message:"send win action", game:game, win:winners});
+
+            setTimeout(function(){
+                games[game.id].startRound();
+            }, 10000);
         };
 
         var error = function(data){

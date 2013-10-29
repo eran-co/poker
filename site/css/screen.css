@@ -20,7 +20,7 @@ body {
     background-size: 100% 100%;
 }
 
-.poker-table #pot {
+.poker-table #pot, .poker-table .pot {
     position: absolute;
     padding: 4px 11px 4px 11px;
     color: gold;
@@ -301,3 +301,14 @@ body {
 .rankKD {color: #890000; background-position: -78em -9.1em; }
 .rankKS {color: #000; background-position: -78em -18.2em; }
 .rankKH {color: #890000; background-position: -78em -27.3em; }
+
+.circle {
+    width: 80%;
+    height:0;
+    padding-bottom: 45%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50% ;
+    background: #007914;
+    border:5px solid #fff;
+}

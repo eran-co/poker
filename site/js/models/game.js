@@ -53,7 +53,7 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
 
             socket.on('win', function(data){
                 console.log(data.message);
-                //that.handleAction(data.game, data.player, data.isNewBetRound);
+                that.win(data.game, data.win);
                 //that.trigger('performAction', data.game, data.player);
             });
 
@@ -127,6 +127,12 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
             }
             this.trigger('performAction', game, player, isNewBetRound);
             //this.trigger('drawFlop', game.flop );
+        },
+
+        win :function (game, win) {
+            // TODO update player/table properties (need to perform last action?)
+
+            this.trigger('win', game, win);
         },
 
         clearPlayerBets: function(){
