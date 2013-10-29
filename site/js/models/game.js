@@ -12,7 +12,8 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
 
             var gameId = this.get('_id');
             // init socket.io
-            var socket = socketio.connect('http://localhost');
+            var url = window.location.origin;
+            var socket = socketio.connect(url);
             socket.on('welcome', function (data) {
                 console.log(data.message);
                 socket.emit('joinGame', { gameId: gameId  });
