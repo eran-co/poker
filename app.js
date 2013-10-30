@@ -5,7 +5,7 @@ var application_root = __dirname,
     io = require('socket.io'),
     passportSocketIo = require("passport.socketio"),
     MemoryStore = new require('express').session.MemoryStore,
-    memoryStore= new MemoryStore({ reapInterval:  60000 * 10 }),
+    memoryStore= new MemoryStore({ reapInterval:  60000 * 10 git }),
 
     app = express(),
     server = require('http').createServer(app),
