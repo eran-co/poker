@@ -90,7 +90,7 @@ define([
             console.log('adding player: '+playerModel);
 
             var seat = playerModel.get('seat');
-            var playerView = new PlayerView({el:'#player' + seat, model: playerModel}).render();
+            new PlayerView({el:'#player' + seat, model: playerModel}).render();
             $('#player' + seat).show();
         },
 
@@ -124,6 +124,7 @@ define([
             var player = this.playerCollection.findWhere({userId:this.user._id});
             if (activePlayer === player.get('seat')){
                 this.showActionMenu(player);
+                this.playSound('user-turn');
             }
             else {
                 this.hideActionMenu();
@@ -191,19 +192,23 @@ define([
 
             var player = win.players[i];
             // clone pot and set it's amount for each winner
-            var pot = $('#pot').hide().clone().removeAttr('id').show().text('$250');
+            var pot = $('#pot').hide().clone().removeAttr('id').show().text('$' + win.prize);
             $('#pot').parent().append(pot);
 
             // find balance position of each winner
             var position = $('#player' + player.seat).position();
             var left = '+=' + (position.left - pot.position().left);
             var top = '+=' + (position.top - pot.position().top);
+
+            var that = this;
             // animate pot to balance position
             pot.animate({left:left, top:top}, 'slow', function(){
                 pot.remove();
+                that.playSound('chips-pile');
             });
 
-            // hide animated pot, increase winner balance
+            // increase winner balance
+            $('#player' + player.seat).find('.balance').html('$' + player.balance);
         },
 
         startRound: function(game, cards){
@@ -211,16 +216,17 @@ define([
             this.updatePot(game.pot);
 
             if (game.river){
-                this.drawRiver(game.river)
+                this.drawRiver(game.river);
             }
             else if (game.turn){
-                this.drawTurn(game.turn)
+                this.drawTurn(game.turn);
             }
             else if (game.flop){
-                this.drawFlop(game.flop)
+                this.drawFlop(game.flop);
             }
             else {
                 this.reset();
+                this.playSound('shuffle');
             }
 
             this.setActivePlayer(game.activePlayer);
@@ -237,13 +243,17 @@ define([
             }
         },
 
+        playSound: function (sound) {
+            document.getElementById(sound + '-sound').play();
+        },
+
         reset: function(){
             // hide all deck cards
             $('.cards').find('.card').hide().attr('class','').html('');
             // remove folded players mask
             $('.player.fold').each(function(){
                 this.style.setProperty( 'display', 'none', 'important' );
-            })
+            });
 
         }
     });
