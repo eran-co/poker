@@ -3,7 +3,7 @@ var passport = require('passport'),
 
 exports.getLoginPage = function(req, res){
     res.sendfile('site/login.html');
-}
+};
 
 exports.login = function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
