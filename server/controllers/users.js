@@ -1,3 +1,4 @@
+/*jslint plusplus: true, node: true */
 var passport = require('passport'),
     User = require('../models/user').userModel;
 
@@ -39,7 +40,7 @@ exports.register = function(req, res) {
         if( err ) {
             var message = "";
             if (err.code === 11000){
-                message = 'User name already taken, please try again with a different one.'
+                message = 'User name already taken, please try again with a different one.';
             }
             else {
                 message = 'please try again';
