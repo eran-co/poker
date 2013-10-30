@@ -349,7 +349,7 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
             endRound(game, player);
         }
         else {
-           sendAction (game, player, false);
+            sendAction (game, player, false);
         }
     };
 
@@ -387,7 +387,7 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
                 seat: player.seat,
                 cards: player.cards,
                 hand: hand.concat(player.cards)
-            }
+            };
         });
         var engine = new Engine();
         var win = engine.findWinners(players);
@@ -399,6 +399,7 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
 
         for (var i = 0; i < win.players.length; i++){
             game.players.id(win.players[i].id).balance += prize;
+            win.players[i].balance = game.players.id(win.players[i].id).balance;
         }
 
         win.prize = prize;
