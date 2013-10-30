@@ -66,4 +66,3 @@ io.set('log level', 1);
 // Bootstrap sockets
 require('./server/config/sockets')(io);
 
-// test git on brackets
