@@ -85,7 +85,7 @@ gameSchema.methods.getPlayerByUserId = function(userId){
 gameSchema.methods.isRoundEnded = function(){
     var gameBet = this.bet;
     var isRoundEnded = this.players.every(function(player){
-        return (player.folded || player.talked && (player.bet === gameBet || player.balance === 0))
+        return (player.folded || player.talked && (player.bet === gameBet || player.balance === 0));
     });
     return isRoundEnded;
 };
@@ -129,7 +129,7 @@ gameSchema.methods.getFullHand = function(){
         return this.flop.slice(0).concat( [this.river, this.turn] );
     }
     else{
-        return []
+        return [];
     }
 };
 

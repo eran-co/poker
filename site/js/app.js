@@ -1,12 +1,8 @@
 define([
     'jquery',
     'router',
-    'models/table',
-    'collections/tables',
-    'views/tables',
-    'views/tables',
-    'socketio'
-    ], function( $, Router, TableModel, TableCollection, TableView, TablesView, io ){
+    'backbone',
+], function( $, Router, Backbone ){
     var app = {
         init: function(){
             //console.log('app init, fetching table data');
@@ -33,9 +29,9 @@ define([
             $.get('/user', function(user){
                 console.log(user);
 
-                var router = new Router({user: user});
+                new Router({user: user});
                 Backbone.history.start();
-            })
+            });
 
 
 //            var collection = new TableCollection();

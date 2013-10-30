@@ -1,0 +1,13 @@
+{
+    "camelcase": true,
+    "jquery": true,
+    "browser": true,
+    "predef": [
+        "define",
+        "require",
+        "Backbone",
+        "describe",
+        "Handlebars",
+        "it"
+    ]
+}

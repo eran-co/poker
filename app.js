@@ -1,3 +1,5 @@
+/*jslint plusplus: true, node: true */
+
 var application_root = __dirname,
     express = require( 'express' ), //Web framework
     path = require( 'path'),
@@ -5,11 +7,11 @@ var application_root = __dirname,
     io = require('socket.io'),
     passportSocketIo = require("passport.socketio"),
     MemoryStore = new require('express').session.MemoryStore,
-    memoryStore= new MemoryStore({ reapInterval:  60000 * 10 git }),
+    memoryStore= new MemoryStore({ reapInterval:  60000 * 10 });
 
-    app = express(),
-    server = require('http').createServer(app),
-    io = io.listen(server);
+var app = express();
+var server = require('http').createServer(app);
+var io = io.listen(server);
 
 app.configure( function() {
 
