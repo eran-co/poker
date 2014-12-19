@@ -172,11 +172,6 @@ define([
             $('#pot').text(potText).show();
         },
 
-//        startRound: function(game, cards){
-//            this.reset();
-//            this.updatePot(game.pot);
-//            this.setActivePlayer(game.activePlayer);
-//        },
         win: function(game, win){
             // mark winner player (title for now)
 

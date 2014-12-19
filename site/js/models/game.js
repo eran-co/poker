@@ -148,6 +148,10 @@ define(['backbone', 'models/player', 'collections/players', 'socketio'], functio
             this.socket.emit('action', data);
         },
 
+        lala: function(){
+
+        },
+
         leaveGame: function(){
             var gameId = this.get('_id');
             this.socket.emit('leaveGame', { gameId: gameId  });

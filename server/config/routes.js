@@ -16,10 +16,18 @@ module.exports = function (app){
     app.post('/login', user.login, function(res, req){
         res.send('login successful');
     });
+    
+    app.get('/fastlogin', function (req, res, next) {
+        req.body.username = req.query.user;
+        req.body.password = req.query.pass;
+        next();
+        },  user.login, function(req, res){
+        res.redirect('/index');  
+    });
 
     app.post('/register', user.register);
 
-    app.get('/user', pass.ensureAuthenticated, user.getUser)
+    app.get('/user', pass.ensureAuthenticated, user.getUser);
 
     app.get('/logout', pass.ensureAuthenticated, user.logout);
 
@@ -33,5 +41,5 @@ module.exports = function (app){
 
     app.get('/api/tables/:id', pass.ensureAuthenticated, table.getTable);
 
-    app.get('/api/game/:id', pass.ensureAuthenticated, game.getGame )
+    app.get('/api/game/:id', pass.ensureAuthenticated, game.getGame );
 };
