@@ -7,13 +7,13 @@
         "url": "https://github.com/psyshush/poker.git"
     },
     "dependencies": {
-        "express": "~3.x.x",
+        "express": "~3.4.x",
         "path": "~0.4.9",
         "mongoose": "~3.6.16",
         "connect-flash": "0.1.x",
-        "passport": ">= 0.0.0",
-        "passport-local": ">= 0.0.0",
-        "socket.io": "~0.9.x",
-        "passport.socketio":""
+        "passport": "0.1.17",
+        "passport-local": "0.1.6",
+        "socket.io": "0.9.16",
+        "passport.socketio":"1.2.1"
     }
 }
