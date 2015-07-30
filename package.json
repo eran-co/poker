@@ -1,20 +1,36 @@
 {
-  "name": "poker",
-  "version": "0.0.1",
-  "description": "basic structure for the pokerApp",
-  "repository": {
+    "name": "poker",
+    "version": "0.0.1",
+    "description": "basic structure for the pokerApp",
+    "repository": {
     "type": "git",
     "url": "https://github.com/psyshush/poker.git"
-  },
-  "dependencies": {
-    "connect-flash": "0.1.x",
-    "connect-mongo": "^0.8.2",
-    "express": "~3.4.x",
-    "mongoose": "~3.6.16",
-    "passport": "0.1.17",
-    "passport-local": "0.1.6",
-    "passport.socketio": "1.2.1",
-    "path": "~0.4.9",
-    "socket.io": "0.9.16"
-  }
+    },
+    "dependencies": {
+        "connect-flash": "0.1.x",
+        "connect-mongo": "^0.8.2",
+        "express": "~3.4.x",
+        "mongoose": "~3.6.16",
+        "passport": "0.1.17",
+        "passport-local": "0.1.6",
+        "passport.socketio": "1.2.1",
+        "path": "~0.4.9",
+        "react": "^0.13.3",
+        "socket.io": "0.9.16"
+    },
+    "devDependencies": {
+        "babel-core": "^5.0.12",
+        "babel-loader": "^5.0.0",
+        "css-loader": "^0.9.0",
+        "grunt": "^0.4.5",
+        "grunt-contrib-watch": "^0.6.1",
+        "grunt-webpack": "^1.0.8",
+        "jsx-loader": "^0.12.2",
+        "matchdep": "^0.3.0",
+        "style-loader": "^0.8.2",
+        "superagent": "^1.1.0",
+        "url-loader": "^0.5.5",
+        "webpack": "^1.4.13",
+        "webpack-dev-server": "^1.6.6"
+    }
 }

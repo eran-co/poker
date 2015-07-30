@@ -12,7 +12,6 @@ lib-cov
 benchmarks/graphs
 testing
 bower_components/
-testing
 .coverage_data
 cover_html
 test.js
@@ -21,3 +20,4 @@ test.js
 npm-debug.log
 
 node_modules
+site/dist

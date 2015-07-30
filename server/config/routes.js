@@ -7,7 +7,7 @@ module.exports = function (app){
 
     // main
     app.get('/',  pass.ensureAuthenticated, function(req, res){
-        res.sendfile('site/index-static.html');
+        res.sendfile('site/app.html');
     });
 
     // login and registration
