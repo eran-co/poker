@@ -80,15 +80,6 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
         });
     };
 
-    var findPlayerIndex = function (players, playerId){
-        for (var i = 0; i < players.length; i++){
-            if (players[i].id === playerId){
-                return i;
-            }
-        }
-        return -1;
-    };
-
     var findNextPlayer = function (players, seat){
         //TODO refactor!!!!
         var biggerSeats =  players.filter(function(player){
@@ -197,6 +188,7 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
                 game.flop = [];
                 game.turn = "";
                 game.river = "";
+                game.deck = getDeck();
 
                 //TODO remove players without money from the game (either mark as fold or call leave table callback)
 
@@ -432,7 +424,7 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
             case gameStates.preFlop:
                 game.flop.push(game.deck.pop());
                 game.flop.push(game.deck.pop());
-                game.flop.push(game.deck.pop())
+                game.flop.push(game.deck.pop());
                 game.state = gameStates.flop;
                 break;
             case gameStates.flop:
@@ -451,8 +443,6 @@ var PokerGame = function (gameId, cbError, cbAddPlayer, cbRemovePlayer, cbStartR
     };
 
     var sendAction = function(game, player, isNewBetRound){
-        var nextPlayer = findNextPlayer(game.players, player.seat).seat;
-        game.activePlayer = nextPlayer;
         game.save(function (err){
             if (err){
                 console.log(err);
