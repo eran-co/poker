@@ -3,15 +3,20 @@
 var application_root = __dirname,
     express = require( 'express' ), //Web framework
     path = require( 'path'),
+    MongoStore = require('connect-mongo')(express),
     passport = require('passport'),
     io = require('socket.io'),
-    passportSocketIo = require("passport.socketio"),
-    MemoryStore = new require('express').session.MemoryStore,
-    memoryStore= new MemoryStore({ reapInterval:  60000 * 10 });
+    passportSocketIo = require("passport.socketio");
+    //MemoryStore = new require('express').session.MemoryStore,
+    //memoryStore= new MemoryStore({ reapInterval:  60000 * 10 });
 
 var app = express();
 var server = require('http').createServer(app);
 var io = io.listen(server);
+
+var mongoStore = new MongoStore({
+    url: 'mongodb://localhost:27017/poker'
+});
 
 app.configure( function() {
 
@@ -29,7 +34,12 @@ app.configure( function() {
 
     //passport
     app.use(express.cookieParser());
-    app.use(express.session({ secret: 'keyboard cat', store: memoryStore }));
+
+
+    app.use(express.session({
+        secret: 'foo',
+        store: mongoStore
+    }));
     app.use(passport.initialize());
     app.use(passport.session());
 });
@@ -53,8 +63,8 @@ server.listen( process.env.PORT || port, process.env.IP || "0.0.0.0", function()
 io.set("authorization", passportSocketIo.authorize({
     cookieParser: express.cookieParser, //or connect.cookieParser
     key:          'connect.sid',        //the cookie where express (or connect) stores its session id.
-    secret:       'keyboard cat',  //the session secret to parse the cookie
-    store:         memoryStore,      //the session store that express uses
+    secret:       'foo',  //the session secret to parse the cookie
+    store:         mongoStore,      //the session store that express uses
     fail: function(data, accept) {      // *optional* callbacks on success or fail
         accept(null, false);              // second param takes boolean on whether or not to allow handshake
     },
