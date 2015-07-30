@@ -1,19 +1,20 @@
 {
-    "name": "poker",
-    "version": "0.0.1",
-    "description": "basic structure for the pokerApp",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/psyshush/poker.git"
-    },
-    "dependencies": {
-        "express": "~3.4.x",
-        "path": "~0.4.9",
-        "mongoose": "~3.6.16",
-        "connect-flash": "0.1.x",
-        "passport": "0.1.17",
-        "passport-local": "0.1.6",
-        "socket.io": "0.9.16",
-        "passport.socketio":"1.2.1"
-    }
+  "name": "poker",
+  "version": "0.0.1",
+  "description": "basic structure for the pokerApp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psyshush/poker.git"
+  },
+  "dependencies": {
+    "connect-flash": "0.1.x",
+    "connect-mongo": "^0.8.2",
+    "express": "~3.4.x",
+    "mongoose": "~3.6.16",
+    "passport": "0.1.17",
+    "passport-local": "0.1.6",
+    "passport.socketio": "1.2.1",
+    "path": "~0.4.9",
+    "socket.io": "0.9.16"
+  }
 }

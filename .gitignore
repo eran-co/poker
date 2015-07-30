@@ -19,3 +19,5 @@ test.js
 .idea
 
 npm-debug.log
+
+node_modules

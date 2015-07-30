@@ -3,6 +3,7 @@
 var application_root = __dirname,
     express = require( 'express' ), //Web framework
     path = require( 'path'),
+    MongoStore = require('connect-mongo')(express),
     passport = require('passport'),
     io = require('socket.io'),
     passportSocketIo = require("passport.socketio"),
@@ -29,7 +30,13 @@ app.configure( function() {
 
     //passport
     app.use(express.cookieParser());
-    app.use(express.session({ secret: 'keyboard cat', store: memoryStore }));
+
+    app.use(express.session({
+        secret: 'foo',
+        store: new MongoStore({
+            url: 'mongodb://poker:xce4Dfg3Sf@paulo.mongohq.com:10094/poker'
+        })
+    }));
     app.use(passport.initialize());
     app.use(passport.session());
 });
