@@ -37,6 +37,18 @@ module.exports = function(grunt) {
                 }
             }
         },
+        less: {
+            development: {
+                options: {
+                    paths: ["site/less"]
+                },
+                files: {
+                    "site/dist/main.css": [
+                        "site/less/main.less"
+                    ]
+                }
+            }
+        },
         watch: {
             app: {
                 files: ["site/js/**/*.js"],
@@ -44,18 +56,18 @@ module.exports = function(grunt) {
                 options: {
                     spawn: false
                 }
+            },
+            less:{
+                files: ["site/less/**/*.less"],
+                tasks: ["less:development"]
             }
         }
     });
+    // grunt.loadNpmTasks('grunt-contrib-less');
 
-    // The development server (the recommended option for development)
     grunt.registerTask("default", ["webpack-dev-server:start"]);
-
-    // Build and watch cycle (another option for development)
-    // Advantage: No server required, can run app from filesystem
-    // Disadvantage: Requests are not blocked until bundle is available,
-    //               can serve an old app on too fast refresh
     grunt.registerTask("dev", ["webpack:build-dev", "watch:app"]);
+    grunt.registerTask("less", ["less:development"]);
 
     // Production build
     grunt.registerTask("build", ["webpack:build"]);
