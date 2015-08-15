@@ -1,0 +1,41 @@
+.player {
+    height: 175px;
+    width: 120px;
+    background: rgba(0, 0, 0, 0.79);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+}
+
+.player--active {
+    border-color: yellow;
+}
+.player--folded {
+    opacity: 0.6;
+}
+
+.player__title {
+    color: white;
+    text-align: center;
+}
+
+.player__image {
+    width: 100%;
+    height: 75%;
+    vertical-align: baseline;
+}
+.player__balance {
+    color: gold;
+    font-weight: bold;
+    text-align: center;
+}
+
+.player__bet {
+    color: gold;
+    position: absolute;
+    top: 200px;
+    left: 45px;
+    background: #797474;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
