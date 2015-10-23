@@ -1,13 +1,20 @@
-var React = require('react');
-var PlayerComponent = require('./PlayerComponent');
-// var PropTypes = React.PropTypes;
+import React, { Component, PropTypes } from 'react';
+import PlayerComponent from './PlayerComponent';
 
-var PlayersComponent = React.createClass({
-
-    render: function() {
+export default class PlayersComponent extends Component {
+    render() {
+        var table = this.props.table;
        var playersNodes = this.props.players.map(function (player) {
+           var seat = player.seat;
          return (
-          <PlayerComponent player={player} />
+          <PlayerComponent
+              key={player.key}
+              player={player}
+              isActive={seat === table.activePlayer}
+              isDealer={seat === table.dealer}
+              isSmallBlind={seat === table.smallBlind}
+              isBigBlind={seat === table.bigBlind} 
+          />
          );
        });
        return (
@@ -16,7 +23,4 @@ var PlayersComponent = React.createClass({
          </div>
        );
    }
-
-});
-
-module.exports = PlayersComponent;
+};

@@ -1,10 +1,34 @@
 .player {
+    position: absolute;
     height: 175px;
     width: 120px;
     background: rgba(0, 0, 0, 0.79);
     border-radius: 5px;
     border-style: solid;
-    border-color: black;
+    border-color: transperant;
+}
+
+.player:nth-last-of-type(1) {
+    top: 50px;
+    left: 8%;
+}
+.player:nth-last-of-type(2) {
+    top: -5px;
+    left: 45%;
+}
+.player:nth-last-of-type(3) {
+    top: 50px;
+    left: 68%;
+}
+.player:nth-last-of-type(4) {
+    top: 50px;
+    left: 8%;
+}
+.player:nth-last-of-type(5) {
+
+}
+.player:nth-last-of-type(6) {
+
 }
 
 .player--active {
@@ -23,7 +47,14 @@
     width: 100%;
     height: 75%;
     vertical-align: baseline;
+    background-size: cover;
 }
+.player__image__title {
+    text-align: center;
+    color: white;
+    background-color: rgba(66, 61, 61, 0.68);
+}
+
 .player__balance {
     color: gold;
     font-weight: bold;
@@ -33,9 +64,9 @@
 .player__bet {
     color: gold;
     position: absolute;
-    top: 200px;
+    top: 186px;
     left: 45px;
-    background: #797474;
+    background: rgba(60, 53, 53, 0.42);
     padding: 5px 10px;
     border-radius: 5px;
 }

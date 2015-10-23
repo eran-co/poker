@@ -16,6 +16,7 @@
     "passport.socketio": "1.2.1",
     "path": "~0.4.9",
     "react": "^0.13.3",
+    "redux": "^3.0.3",
     "socket.io": "0.9.16"
   },
   "devDependencies": {
