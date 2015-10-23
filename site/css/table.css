@@ -1,0 +1,14 @@
+.table {
+
+}
+
+.table__circle {
+    width: 90%;
+    margin: 0 auto;
+    padding-bottom: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50% ;
+    background: #007914;
+    border:5px solid #fff;
+}
