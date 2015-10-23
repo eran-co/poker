@@ -1,5 +1,14 @@
 import React from 'react';
-import TableComponent from './js/Components/TableComponent.js';
-//var TableComponent = require('./js/Components/TableComponent.js');
+import { createStore } from 'redux';
+import { Provider } from 'react-redux'
 
-React.render(<TableComponent/>, document.body);
+import pokerApp from './js/Reducers/reducers';
+import TableComponent from './js/Components/TableComponent.js';
+
+let store = createStore(pokerApp);
+
+React.render(
+    <Provider store={store}>
+        <TableComponent store={store}/>
+    </Provider>,
+     document.body);

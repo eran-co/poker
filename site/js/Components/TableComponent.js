@@ -1,20 +1,29 @@
 import React, { Component, PropTypes } from 'react';
 import PlayersComponent from './PlayersComponent';
+import { connect } from 'react-redux';
 import {tableData} from '../config/mock.js';
 
-export default class TableComponent extends Component {
-    constructor(props) {
-        super(props);
-        console.log(tableData)
-        this.state = tableData;
-    }
+class TableComponent extends Component {
+    //constructor(props) {
+    //    super(props);
+    //    console.log(tableData)
+    //    this.state = tableData;
+    //}
 
     render() {
-
+        const {table} = this.props;
         return (
             <div className="table table__circle">
-                <PlayersComponent players={this.state.players} table={this.state}/>
+                <PlayersComponent players={table.players} table={table}/>
             </div>
         );
     }
-};
+}
+
+function select(state) {
+    return {
+        table: state
+    };
+}
+
+export default connect(select)(TableComponent);
