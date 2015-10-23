@@ -1,10 +1,9 @@
-var React = require('react');
-var PlayerCardsComponent = require('./PlayerCardsComponent');
-// var PropTypes = React.PropTypes;
+import React, { Component, PropTypes } from 'react';
+import PlayerCardsComponent from './PlayerCardsComponent';
 
-var PlayerComponent = React.createClass({
+export default class PlayerComponent extends Component {
 
-    render: function() {
+    render() {
         var player = this.props.player;
         var className = 'player';
         if (player.folded) {
@@ -37,7 +36,4 @@ var PlayerComponent = React.createClass({
             </div>
         );
     }
-
-});
-
-module.exports = PlayerComponent;
+};
