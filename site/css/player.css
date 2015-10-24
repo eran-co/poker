@@ -4,8 +4,6 @@
     width: 120px;
     background: rgba(0, 0, 0, 0.79);
     border-radius: 5px;
-    border-style: solid;
-    border-color: transperant;
 }
 
 .player:nth-last-of-type(1) {
@@ -32,6 +30,7 @@
 }
 
 .player--active {
+     border-style: solid;
     border-color: yellow;
 }
 .player--folded {

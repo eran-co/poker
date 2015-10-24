@@ -16,7 +16,9 @@
     "passport.socketio": "1.2.1",
     "path": "~0.4.9",
     "react": "^0.14.0",
+    "react-addons": "^0.9.0",
     "react-dom": "^0.14.0",
+    "react-redux": "^4.0.0",
     "redux": "^3.0.3",
     "socket.io": "0.9.16"
   },
@@ -39,6 +41,7 @@
   "scripts": {
     "start": "npm run start-server & npm run webpack",
     "start-server": "node app.js",
+    "debug-server": "node-debug app.js",
     "webpack": "grunt dev"
   }
 }

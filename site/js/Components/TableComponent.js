@@ -14,10 +14,13 @@ class TableComponent extends Component {
     render() {
         const {table} = this.props;
         return (
-            <div className="table table__circle">
-                <PlayersComponent players={table.players} table={table}/>
+            <div className="table-container">
+                <div className="table table__circle">
+                    <PlayersComponent players={table.players} table={table}/>
+                </div>
                 <ActionsComponent />
             </div>
+
 
         );
     }
