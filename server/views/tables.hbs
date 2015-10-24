@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Poker</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/semantic.css">
+    <!--<link rel="stylesheet" href="css/animate.css">-->
+    <!--<link rel="stylesheet" href="css/odometer-theme-default.css">-->
+    <link rel="stylesheet" href="css/screen.css">
+</head>
+
+<body>
+<div class="header">
+    <div class="ui inverted menu">
+        <!--<a class="item leave">-->
+        <!--<i class="arrow left icon"></i> Leave table-->
+        <!--</a>-->
+        <div class="item">
+            <i class="user icon"></i> <span class="user-name">{{userName}}</span>
+        </div>
+        <div class="right menu">
+
+            <a class="item log-out">
+                Log out  <i class="sign out icon"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="ui segment">
+    <h3 class="ui header">
+        Available Tables
+        <div class="sub header">please choose a table to join</div>
+    </h3>
+
+    <table class="ui basic table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Bets</th>
+            <th>Players</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each tables}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>${{this.smallBlind}} / ${{this.bigBlind}}</td>
+                <td>{{this.activePlayers}} of {{this.maxPlayers}}</td>
+                <td>
+                    <a href="/game/{{this._id}}" class="ui tiny blue button join-table" data-game-id="{{this._id}}">
+                        join
+                    </a>
+                </td>
+            </tr>
+        {{/each}}
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

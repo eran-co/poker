@@ -6,7 +6,8 @@ var application_root = __dirname,
     MongoStore = require('connect-mongo')(express),
     passport = require('passport'),
     io = require('socket.io'),
-    passportSocketIo = require("passport.socketio");
+    passportSocketIo = require("passport.socketio"),
+    exphbs  = require('express-handlebars');
     //MemoryStore = new require('express').session.MemoryStore,
     //memoryStore= new MemoryStore({ reapInterval:  60000 * 10 });
 
@@ -43,6 +44,10 @@ app.configure( function() {
     app.use(passport.initialize());
     app.use(passport.session());
 });
+
+app.engine('.hbs', exphbs({extname: '.hbs'}));
+app.set('view engine', '.hbs');
+app.set('views', 'server/views');
 
 // bootstrap DB
 require('./server/config/db');

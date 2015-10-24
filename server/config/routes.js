@@ -7,7 +7,14 @@ module.exports = function (app){
 
     // main
     app.get('/',  pass.ensureAuthenticated, function(req, res){
-        res.sendfile('site/app.html');
+        table.getTablesData(function(tablesData) {
+            res.render('tables', {
+                tables: tablesData,
+                userName: req.user.toJSON().username
+            });
+        });
+
+        //res.sendfile('site/app.html');
     });
 
     // login and registration
@@ -41,5 +48,5 @@ module.exports = function (app){
 
     app.get('/api/tables/:id', pass.ensureAuthenticated, table.getTable);
 
-    app.get('/api/game/:id', pass.ensureAuthenticated, game.getGame );
+    app.get('/game/:id', pass.ensureAuthenticated, game.getGame );
 };

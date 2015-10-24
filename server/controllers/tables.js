@@ -6,6 +6,12 @@ exports.getTables = function(req, res){
     });
 };
 
+exports.getTablesData = function(callback){
+    Table.find(function (err, tables) {
+        callback(tables);
+    });
+};
+
 exports.getTable = function(req, res){
     var id = req.params.id;
     if (id){

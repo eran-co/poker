@@ -4,7 +4,7 @@ import ActionsComponent from './ActionsComponent';
 import { connect } from 'react-redux';
 import {tableData} from '../config/mock.js';
 
-class TableComponent extends Component {
+class GameComponent extends Component {
     //constructor(props) {
     //    super(props);
     //    console.log(tableData)
@@ -12,11 +12,11 @@ class TableComponent extends Component {
     //}
 
     render() {
-        const {table} = this.props;
+        const {game, userName} = this.props;
         return (
             <div className="table-container">
                 <div className="table table__circle">
-                    <PlayersComponent players={table.players} table={table}/>
+                    <PlayersComponent players={game.players} table={game} user-name={userName} />
                 </div>
                 <ActionsComponent />
             </div>
@@ -28,8 +28,9 @@ class TableComponent extends Component {
 
 function select(state) {
     return {
-        table: state
+        game: state.game,
+        userName: state.userName
     };
 }
 
-export default connect(select)(TableComponent);
+export default connect(select)(GameComponent);

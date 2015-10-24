@@ -33,7 +33,7 @@ exports.getGame = function (req, res){
             }
         }
 
-        res.send(game);
+        res.render('game', {game: JSON.stringify(game), user: req.user.userName });
     })
 };
 
