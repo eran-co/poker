@@ -13,11 +13,11 @@
 
 .table__circle {
     margin-top: 20px;
-    flex-grow: 5;
+    flex-grow: 7;
     width: 95%;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50% ;
     background: #007914;
-    border:5px solid #fff;
+    border: 6px solid #CFE420;
 }

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import PlayerCardsComponent from './PlayerCardsComponent';
+import CurrencyComponent from './CurrencyComponent';
 
 export default class PlayerComponent extends Component {
 
@@ -29,8 +30,8 @@ export default class PlayerComponent extends Component {
                 <div className="player__image" style={{backgroundImage: 'url(' + player.imageUrl + ')'}}>
                     {position ? <div className="player__image__title">{position}</div> : null }
                 </div>
-                <div className="player__balance">{player.balance}</div>
-                {player.bet ? <div className="player__bet">{player.bet + '$'}</div> : null}
+                <div className="player__balance"><CurrencyComponent value={player.balance}/></div>
+                {player.bet ? <div className="player__bet"><CurrencyComponent value={player.bet}/></div> : null}
                 {player.cards.length > 0 ? <PlayerCardsComponent cards={player.cards}/> : null}
 
             </div>
